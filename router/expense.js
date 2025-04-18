@@ -1,5 +1,14 @@
 const express = require("express");
-const router = new express.Router();
+const router = express.Router();
+const {
+  addExpense,
+  getExpenses,
+  deleteExpense,
+} = require("../controller/expenseController");
 
-router.post("/expense", () => {});
+// POST /api/expenses → add new expense
+router.post("/", addExpense);
+router.get("/", addExpense);
+router.delete("/", deleteExpense);
+
 module.exports = router;

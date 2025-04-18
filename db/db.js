@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
+mongoose.set("debug", true);
 require("dotenv").config();
 const uri = process.env.MONGO_URI;
+
 // Connect to MongoDB
 async function main() {
   try {
@@ -11,4 +13,4 @@ async function main() {
   }
 }
 
-module.exports = main;
+main();

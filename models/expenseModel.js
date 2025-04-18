@@ -15,8 +15,9 @@ const expenseSchema = new mongoose.Schema(
     },
     Category: {
       type: String,
-      trim: true,
+      enum: ["Food", "Clothing", "Grocery", "Misc"],
       required: true,
+      trim: true,
     },
   },
   {
@@ -26,3 +27,4 @@ const expenseSchema = new mongoose.Schema(
 
 const Expense = mongoose.model("Expense", expenseSchema);
 module.exports = Expense;
+// C:\Users\ACER\mongodb\bin\mongod.exe --dbpath=C:\Users\ACER\mongodb-data

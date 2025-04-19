@@ -8,7 +8,7 @@ const {
 
 // POST /api/expenses → add new expense
 router.post("/", addExpense);
-router.get("/", addExpense);
-router.delete("/", deleteExpense);
+router.get("/", getExpenses);
+router.delete("/:id", deleteExpense);
 
 module.exports = router;

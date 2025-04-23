@@ -7,25 +7,39 @@ const addExpense = async (req, res) => {
     if (!Name || !Amount || !Category) {
       return res.status(400).json({ error: "All fields are required" });
     }
-    let newExpense = await Expense.create({ Name, Amount, Category });
+    let newExpense = await Expense.create({
+      Name,
+      Amount,
+      Category,
+      user: req.user.userId,
+    });
     res.status(201).json(newExpense);
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
 };
-
 const getExpenses = async (req, res) => {
   try {
     const { sortBy = "createdAt", order = "desc", category } = req.query;
-    const sortOrder = order === "asc" ? 1 : -1;
-    const filter = {}; // if no category then it is empty
 
+    const sortOrder = order === "asc" ? 1 : -1;
+
+    const filter = {};
+
+    // If a category is provided, add it to the filter
     if (category) {
-      filter.Category = category;
+      filter.category = category;
     }
-    const expenses = await Expense.find(filter).sort({ [sortBy]: sortOrder });
+
+    // Fetch expenses for the authenticated user, with optional category filter and sorting
+    const expenses = await Expense.find({
+      user: req.user.userId,
+      ...filter,
+    }).sort({ [sortBy]: sortOrder });
+
     res.status(200).json(expenses);
   } catch (err) {
+    s;
     res.status(500).json({ error: "Failed to fetch expenses" });
   }
 };

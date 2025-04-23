@@ -1,4 +1,6 @@
 const express = require("express");
+const Expense = require("../models/userModel");
+const protect = require("../middleware/auth");
 const router = express.Router();
 const {
   addExpense,
@@ -8,9 +10,9 @@ const {
 } = require("../controller/expenseController");
 
 // POST /api/expenses → add new expense
-router.post("/", addExpense);
-router.get("/", getExpenses);
-router.delete("/:id", deleteExpense);
-router.get("/summary", summaryExpense);
+router.post("/", protect, addExpense);
+router.get("/", protect, getExpenses);
+router.delete("/:id", protect, deleteExpense);
+router.get("/summary", protect, summaryExpense);
 
 module.exports = router;

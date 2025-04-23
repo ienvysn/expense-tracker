@@ -21,13 +21,18 @@ const expenseSchema = new mongoose.Schema(
         "Health",
         "Entertainment",
         "Shopping",
-        "insurance",
+        "Insurance",
         "Misc",
         "Personal",
       ],
       required: true,
       trim: true,
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    }, // This links the expense to a user
   },
   {
     timestamps: true,

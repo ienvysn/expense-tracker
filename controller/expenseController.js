@@ -49,7 +49,10 @@ const deleteExpense = async (req, res) => {
     const { id } = req.params;
     console.log(id);
 
-    const deleted = await Expense.findByIdAndDelete(id);
+    const deleted = await Expense.findByIdAndDelete({
+      user: req.user.userId,
+      _id: id,
+    });
     if (!deleted) {
       return res.status(404).json({ error: "Expense not found" });
     }
@@ -72,6 +75,11 @@ const summaryExpense = async (req, res) => {
 
     //group by month and days
     const result = await Expense.aggregate([
+      {
+        $match: {
+          user: req.user.userId, // Filter by user first
+        },
+      },
       {
         $group: {
           _id: {
@@ -119,6 +127,11 @@ const summaryExpense = async (req, res) => {
     });
 
     const mostUsedCategory = await Expense.aggregate([
+      {
+        $match: {
+          user: req.user.userId, // Filter by user first
+        },
+      },
       { $group: { _id: "$Category", count: { $sum: 1 } } },
       { $sort: { count: -1 } }, // sorts from the most expensive
       { $limit: 1 },

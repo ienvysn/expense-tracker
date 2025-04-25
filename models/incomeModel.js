@@ -12,6 +12,7 @@ const incomeSchema = new mongoose.Schema(
       type: Number,
       required: true,
       trim: true,
+      min: [0, "Income amount must be a positive number"],
     },
     Category: {
       type: String,
@@ -26,7 +27,6 @@ const incomeSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     }, // This links the income to a user
   },
   {

@@ -1,7 +1,7 @@
 const mongodb = require("mongodb");
 const mongoose = require("mongoose");
 
-const expenseSchema = new mongoose.Schema(
+const incomeSchema = new mongoose.Schema(
   {
     Name: {
       type: String,
@@ -15,16 +15,7 @@ const expenseSchema = new mongoose.Schema(
     },
     Category: {
       type: String,
-      enum: [
-        "Food",
-        "Transportation",
-        "Health",
-        "Entertainment",
-        "Shopping",
-        "Insurance",
-        "Misc",
-        "Personal",
-      ],
+      enum: ["Salary", "Business", "Gifts", "Interest", "Allowance", "Other"],
       required: true,
       trim: true,
     },
@@ -36,13 +27,13 @@ const expenseSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-    }, // This links the expense to a user
+    }, // This links the income to a user
   },
   {
     timestamps: true,
   }
 );
 
-const Expense = mongoose.model("Expense", expenseSchema);
-module.exports = Expense;
+const Income = mongoose.model("Income", incomeSchema);
+module.exports = Income;
 // C:\Users\ACER\mongodb\bin\mongod.exe --dbpath=C:\Users\ACER\mongodb-data

@@ -1,5 +1,5 @@
 const Income = require("../models/incomeModel");
-
+const User = require("../models/userModel");
 const addIncome = async (req, res) => {
   try {
     const { Name, Amount, Category, Description } = req.body;
@@ -12,6 +12,9 @@ const addIncome = async (req, res) => {
       Category,
       Description,
       user: req.user.userId,
+    });
+    await User.findByIdAndUpdate(req.user.userId, {
+      $inc: { balance: Amount },
     });
     res.status(201).json(newIncome);
   } catch (error) {

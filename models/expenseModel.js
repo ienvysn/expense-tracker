@@ -3,11 +3,6 @@ const mongoose = require("mongoose");
 
 const expenseSchema = new mongoose.Schema(
   {
-    Name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
     Amount: {
       type: Number,
       required: true,
@@ -31,6 +26,7 @@ const expenseSchema = new mongoose.Schema(
     Description: {
       type: String,
       trim: true,
+      request: true,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,

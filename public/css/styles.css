@@ -1,0 +1,75 @@
+.dashboard-body {
+  background: #121212;
+  font-family: "Segoe UI", sans-serif;
+  color: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 40px;
+}
+body,
+html {
+  overflow: hidden;
+}
+.register-wrapper {
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+}
+
+.register-card {
+  background: #1e1e1e;
+  padding: 50px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.5s ease;
+}
+
+.register-card h2 {
+  font-size: 2rem;
+  color: #6effa0;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.register-form input {
+  width: 90%;
+  padding: 18px 20px;
+  margin: 12px 0;
+  border: none;
+  border-radius: 10px;
+  background: #2a2a2a;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.register-form button {
+  width: 98%;
+  padding: 16px;
+  background: #6effa0;
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background 0.2s ease;
+}
+
+.register-form button:hover {
+  background: #57db87;
+}
+
+.login-note {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.95rem;
+  color: #aaa;
+}
+
+.login-note a {
+  color: #6effa0;
+  text-decoration: none;
+}

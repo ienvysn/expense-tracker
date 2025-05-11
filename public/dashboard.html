@@ -136,6 +136,33 @@
         }
       }
 
+      // Function to load recent transactions
+
+      // Helper function to get emoji for category
+      function getCategoryEmoji(category) {
+        const emojis = {
+          // Expense categories
+          Food: "🍕",
+          Transportation: "🚌",
+          Health: "💊",
+          Entertainment: "🎮",
+          Shopping: "🛍️",
+          Insurance: "📝",
+          Misc: "📦",
+          Personal: "👤",
+
+          // Income categories
+          Salary: "💰",
+          Business: "💼",
+          Gifts: "🎁",
+          Interest: "💹",
+          Allowance: "💵",
+          Other: "🔄",
+        };
+
+        return emojis[category] || "📊";
+      }
+
       // Load data when page loads
       window.addEventListener("DOMContentLoaded", () => {
         loadSummaryData();

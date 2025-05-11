@@ -8,7 +8,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="dashboardstyles.css" />
+    <link rel="stylesheet" href="/css/dashboardstyles.css" />
   </head>
   <body>
     <aside>
@@ -32,7 +32,7 @@
         </div>
         <!-- Income Card -->
         <div class="card" style="max-height: 220px; overflow-y: auto">
-          <h3 class="summary-heading">Montly Incomes</h3>
+          <h3 class="summary-heading">Montly Income</h3>
           <div class="item-cards">
             <div class="summary-text green">$300</div>
           </div>
@@ -40,7 +40,7 @@
 
         <!-- Expenses Card -->
         <div class="card" style="max-height: 220px; overflow-y: auto">
-          <h3 class="summary-heading">Monthly Expenses</h3>
+          <h3 class="summary-heading">Monthly Expense</h3>
           <div class="item-cards">
             <div class="summary-text red">$300</div>
           </div>
@@ -53,18 +53,14 @@
         <!-- Recent Expenses -->
         <div class="card">
           <h3>Recent Transaction</h3>
-          <div class="item-cards">
+          <div class="item-cards" id="recent-transaction">
             <div class="item-card income">
               🍕 Food - $15 <small>Apr 28</small>
             </div>
             <div class="item-card expense">
               🚌 Transport - $5 <small>Apr 27</small>
             </div>
-            <div class="item-card">📱 Recharge - $10 <small>Apr 27</small></div>
-            <div class="item-card">💊 Health - $12 <small>Apr 26</small></div>
-            <div class="item-card">
-              🎮 Entertainment - $20 <small>Apr 25</small>
-            </div>
+
             <div class="item-card">
               📚 Education - $30 <small>Apr 24</small>
             </div>
@@ -78,8 +74,6 @@
           <div class="item-cards">
             <div class="item-card income">🏠 Rent - $100</div>
             <div class="item-card expense">📚 Education - $30</div>
-            <div class="item-card">🎮 Entertainment - $20</div>
-            <div class="item-card">🎮 Entertainment - $20</div>
             <div class="item-card">🎮 Entertainment - $20</div>
           </div>
         </div>
@@ -104,5 +98,55 @@
         </div>
       </div>
     </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      // Check if token exists
+      const token = localStorage.getItem("token");
+      if (!token) {
+        window.location.href = "/login.html";
+      }
+
+      // Setup axios with authorization header
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+      // Function to load summary data
+      async function loadSummaryData() {
+        try {
+          const response = await axios.get("/api/summary");
+          const { totalIncome, totalExpense, totalbalance } = response.data;
+
+          // Update the UI
+          document.querySelector(
+            ".card:nth-child(1) .summary-text"
+          ).textContent = `$${totalbalance}`;
+          document.querySelector(
+            ".card:nth-child(2) .summary-text"
+          ).textContent = `$${totalIncome}`;
+          document.querySelector(
+            ".card:nth-child(3) .summary-text"
+          ).textContent = `$${totalExpense}`;
+        } catch (error) {
+          console.error("Error loading summary data:", error);
+          if (error.response && error.response.status === 401) {
+            // Token expired or invalid
+            localStorage.removeItem("token");
+            window.location.href = "/login.html";
+          }
+        }
+      }
+
+      // Load data when page loads
+      window.addEventListener("DOMContentLoaded", () => {
+        loadSummaryData();
+        loadRecentTransactions();
+
+        // Add logout functionality
+        document.querySelector(".user-btn").addEventListener("click", () => {
+          localStorage.removeItem("token");
+          window.location.href = "/login.html";
+        });
+      });
+    </script>
   </body>
 </html>

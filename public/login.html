@@ -44,7 +44,7 @@
       const password = document.querySelector(".password").value;
 
       try {
-        const response = await axios.get("/api/auth/login", {
+        const response = await axios.post("/api/auth/login", {
           email,
           password,
         });
@@ -53,7 +53,7 @@
         localStorage.setItem("token", token);
         window.location.href = "/dashboard"; // redirect to dashboard
       } catch (error) {
-        alert(error);
+        alert(error.response?.data?.message || "Login failed");
       }
     });
   </script>

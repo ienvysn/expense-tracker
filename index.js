@@ -16,6 +16,14 @@ app.use("/api/balance", balanceRoutes);
 app.use("/api/summary", SummaryRoutes);
 
 app.use(express.static(path.join(__dirname, "public")));
+app.get("/dashboard", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "dashboard.html"));
+});
+
+// Catch-all route to serve index.html for any other requests
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "public", "index.html"));
+// });
 
 app.listen(3000, () => {
   console.log("Server is up");

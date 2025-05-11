@@ -45,7 +45,7 @@ const login = async (req, res) => {
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
-    res.sendFile(path.join(__dirname, "public", "login.html"));
+
     res.status(200).json({ token });
   } catch (error) {
     res.status(500).json({ error });

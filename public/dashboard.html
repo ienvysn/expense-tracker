@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense Tracker Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="dashboardstyles.css" />
+  </head>
+  <body>
+    <aside>
+      <div>
+        <h1>Expense Tracker</h1>
+        <div class="nav-link active">Dashboard</div>
+        <div class="nav-link">Income</div>
+        <div class="nav-link">Expense</div>
+      </div>
+      <button class="user-btn">User</button>
+    </aside>
+
+    <main>
+      <div class="card-container">
+        <!-- Income Card -->
+        <div class="card" style="max-height: 220px; overflow-y: auto">
+          <h3 class="summary-heading">Total Balance</h3>
+          <div class="item-cards">
+            <div class="summary-text">$300</div>
+          </div>
+        </div>
+        <!-- Income Card -->
+        <div class="card" style="max-height: 220px; overflow-y: auto">
+          <h3 class="summary-heading">Montly Incomes</h3>
+          <div class="item-cards">
+            <div class="summary-text green">$300</div>
+          </div>
+        </div>
+
+        <!-- Expenses Card -->
+        <div class="card" style="max-height: 220px; overflow-y: auto">
+          <h3 class="summary-heading">Monthly Expenses</h3>
+          <div class="item-cards">
+            <div class="summary-text red">$300</div>
+          </div>
+        </div>
+      </div>
+      <h2 class="section-title">Transaction</h2>
+
+      <!-- Top Section -->
+      <div class="card-container">
+        <!-- Recent Expenses -->
+        <div class="card">
+          <h3>Recent Transaction</h3>
+          <div class="item-cards">
+            <div class="item-card income">
+              🍕 Food - $15 <small>Apr 28</small>
+            </div>
+            <div class="item-card expense">
+              🚌 Transport - $5 <small>Apr 27</small>
+            </div>
+            <div class="item-card">📱 Recharge - $10 <small>Apr 27</small></div>
+            <div class="item-card">💊 Health - $12 <small>Apr 26</small></div>
+            <div class="item-card">
+              🎮 Entertainment - $20 <small>Apr 25</small>
+            </div>
+            <div class="item-card">
+              📚 Education - $30 <small>Apr 24</small>
+            </div>
+            <div class="item-card">🏠 Rent - $100 <small>Apr 23</small></div>
+          </div>
+        </div>
+
+        <!-- Top Categories -->
+        <div class="card">
+          <h3>Top Categories</h3>
+          <div class="item-cards">
+            <div class="item-card income">🏠 Rent - $100</div>
+            <div class="item-card expense">📚 Education - $30</div>
+            <div class="item-card">🎮 Entertainment - $20</div>
+            <div class="item-card">🎮 Entertainment - $20</div>
+            <div class="item-card">🎮 Entertainment - $20</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- All Expenses -->
+      <div class="all-expenses">
+        <div class="all-expenses-header">
+          <h3>All Transaction</h3>
+          <span>Sort By ▾</span>
+        </div>
+        <div class="item-cards">
+          <div class="item-card">🍕 Food - $15 <small>Apr 28</small></div>
+          <div class="item-card">🚌 Transport - $5 <small>Apr 27</small></div>
+          <div class="item-card">📱 Recharge - $10 <small>Apr 27</small></div>
+          <div class="item-card">💊 Health - $12 <small>Apr 26</small></div>
+          <div class="item-card">
+            🎮 Entertainment - $20 <small>Apr 25</small>
+          </div>
+          <div class="item-card">📚 Education - $30 <small>Apr 24</small></div>
+          <div class="item-card">🏠 Rent - $100 <small>Apr 23</small></div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

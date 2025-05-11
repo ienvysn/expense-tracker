@@ -16,6 +16,7 @@ app.use("/api/balance", balanceRoutes);
 app.use("/api/summary", SummaryRoutes);
 
 app.use(express.static(path.join(__dirname, "public")));
+
 app.listen(3000, () => {
   console.log("Server is up");
 });

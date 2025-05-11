@@ -71,7 +71,7 @@
         <!-- Top Categories -->
         <div class="card">
           <h3>Top Categories</h3>
-          <div class="item-cards">
+          <div class="item-cards" id="top-category"></div>
             <div class="item-card income">🏠 Rent - $100</div>
             <div class="item-card expense">📚 Education - $30</div>
             <div class="item-card">🎮 Entertainment - $20</div>
@@ -137,7 +137,84 @@
       }
 
       // Function to load recent transactions
+      async function loadRecentTransactions() {
+        try {
+          // Get expenses
+          const expensesResponse = await axios.get("/api/expenses");
+          const expenses = expensesResponse.data;
 
+          // Get income
+          const incomeResponse = await axios.get("/api/income");
+          const incomes = incomeResponse.data;
+
+          // Combine and sort by date
+          const transactions = [
+            ...expenses.map((e) => ({ ...e, type: "expense" })),
+            ...incomes.map((i) => ({ ...i, type: "income" })),
+          ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+          // console.log(transactions);
+
+          // Get the recent transactions container
+          const recentTransactionsContainer = document.querySelector(
+            ".card:nth-child(1) #recent-transaction"
+          );
+          recentTransactionsContainer.innerHTML = ""; // Clear existing content
+
+          // Display recent transactions (limit to 5)
+          const recentTransactions = transactions.slice(0, 5);
+          recentTransactions.forEach((transaction) => {
+            const date = new Date(transaction.createdAt).toLocaleDateString(
+              "en-US",
+              { month: "short", day: "numeric" }
+            );
+            const amount = transaction.Amount;
+            const category = transaction.Category;
+            const type = transaction.type;
+
+            // Create and add the transaction element
+            const transactionElement = document.createElement("div");
+            transactionElement.className = `item-card ${type}`;
+            transactionElement.innerHTML = `
+              ${getCategoryEmoji(
+                category
+              )} ${category} - $${amount} <small>${date}</small>
+            `;
+
+            recentTransactionsContainer.appendChild(transactionElement);
+          });
+
+          // Also update the all transactions section
+          const allTransactionsContainer = document.querySelector(
+            ".all-expenses .item-cards"
+          );
+          allTransactionsContainer.innerHTML = ""; // Clear existing content
+
+          transactions.forEach((transaction) => {
+            const date = new Date(transaction.createdAt).toLocaleDateString(
+              "en-US",
+              { month: "short", day: "numeric" }
+            );
+            const amount = transaction.Amount;
+            const category = transaction.Category;
+            const type = transaction.type;
+
+            // Create and add the transaction element
+            const transactionElement = document.createElement("div");
+            transactionElement.className = `item-card ${type}`;
+            transactionElement.innerHTML = `
+              ${getCategoryEmoji(
+                category
+              )} ${category} - $${amount} <small>${date}</small>
+            `;
+
+            allTransactionsContainer.appendChild(transactionElement);
+          });
+        } catch (error) {
+          console.error("Error loading transactions:", error);
+        }
+      }
+
+      
       // Helper function to get emoji for category
       function getCategoryEmoji(category) {
         const emojis = {
@@ -167,6 +244,7 @@
       window.addEventListener("DOMContentLoaded", () => {
         loadSummaryData();
         loadRecentTransactions();
+        loadTopCategories();
 
         // Add logout functionality
         document.querySelector(".user-btn").addEventListener("click", () => {

@@ -214,7 +214,75 @@
         }
       }
 
-      
+      async function loadTopCategories() {
+        const categories = [
+          "Food",
+          "Transportation",
+          "Health",
+          "Entertainment",
+          "Shopping",
+          "Insurance",
+          "Misc",
+          "Personal",
+          "Salary",
+          "Business",
+          "Gifts",
+          "Interest",
+          "Allowance",
+          "Other",
+        ];
+        const categoriesSum = {
+          // Expense categories
+          Food: 0,
+          Transportation: 0,
+          Health: 0,
+          Entertainment: 0,
+          Shopping: 0,
+          Insurance: 0,
+          Misc: 0,
+          Personal: 0,
+
+          // Income categories
+          Salary: 0,
+          Business: 0,
+          Gifts: 0,
+          Interest: 0,
+          Allowance: 0,
+          Other: 0,
+        };
+        try {
+          const expensesResponse = await axios.get("/api/expenses");
+          const expenses = expensesResponse.data;
+
+          // Get income
+          const incomeResponse = await axios.get("/api/income");
+          const incomes = incomeResponse.data;
+
+          // console.log(expenses);
+          const transactions = [
+            ...expenses.map((e) => ({ ...e, type: "expense" })),
+            ...incomes.map((i) => ({ ...i, type: "income" })),
+          ];
+
+          transactions.forEach((transaction) => {
+            cat = transaction.Category;
+
+            // console.log(categoriesSum.Category);
+            categoriesSum[cat] += transaction.Amount;
+          });
+
+          //sort
+          console.log(categoriesSum);
+          const sorted = Object.entries(categoriesSum).sort(
+            (a, b) => b[1] - a[1]
+          );
+          console.log(sorted);
+
+          const topCategory = sorted.slice(0, 3);
+          console.log(topCategory);
+        
+        } catch {}
+      }
       // Helper function to get emoji for category
       function getCategoryEmoji(category) {
         const emojis = {

@@ -72,8 +72,6 @@
         <div class="card">
           <h3>Top Categories</h3>
           <div class="item-cards" id="top-category"></div>
-          
-          </div>
         </div>
       </div>
 
@@ -81,7 +79,16 @@
       <div class="all-expenses">
         <div class="all-expenses-header">
           <h3>All Transaction</h3>
-          <span>Sort By ▾</span>
+          <div class="all-expenses-header">
+            <select id="sort-transactions">
+              <option value="date-desc">Date (newest first)</option>
+              <option value="date-asc">Date (oldest first)</option>
+              <option value="amount-desc">Amount (highest first)</option>
+              <option value="amount-asc">Amount (lowest first)</option>
+              <option value="category">Category (A-Z)</option>
+              <option value="type">Type (Income/Expense)</option>
+            </select>
+          </div>
         </div>
         <div class="item-cards">
           <div class="item-card">🍕 Food - $15 <small>Apr 28</small></div>
@@ -134,59 +141,64 @@
         }
       }
 
-      // Function to load recent transactions
-      async function loadRecentTransactions() {
+      async function loadAllTransactions(sortBy = "date-desc") {
         try {
-          
+          // Get expenses
           const expensesResponse = await axios.get("/api/expenses");
           const expenses = expensesResponse.data;
 
-         
+          // Get income
           const incomeResponse = await axios.get("/api/income");
           const incomes = incomeResponse.data;
 
-          // Combine and sort by date
-          const transactions = [
+          // Combine transactions
+          let transactions = [
             ...expenses.map((e) => ({ ...e, type: "expense" })),
             ...incomes.map((i) => ({ ...i, type: "income" })),
-          ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-          // console.log(transactions);
+          ];
 
-          // Get the recent transactions container
-          const recentTransactionsContainer = document.querySelector(
-            ".card:nth-child(1) #recent-transaction"
-          );
-          recentTransactionsContainer.innerHTML = ""; \
+          // Sort based on selected option
+          switch (sortBy) {
+            case "date-desc":
+              transactions.sort(
+                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+              );
+              break;
+            case "date-asc":
+              transactions.sort(
+                (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+              );
+              break;
+            case "amount-desc":
+              transactions.sort((a, b) => b.Amount - a.Amount);
+              break;
+            case "amount-asc":
+              transactions.sort((a, b) => a.Amount - b.Amount);
+              break;
+            case "category":
+              transactions.sort((a, b) => a.Category.localeCompare(b.Category));
+              break;
+            case "type":
+              transactions.sort((a, b) => a.type.localeCompare(b.type));
+              break;
+          }
 
-          // Display recent transactions (limit to 5)
-          const recentTransactions = transactions.slice(0, 5);
-          recentTransactions.forEach((transaction) => {
-            const date = new Date(transaction.createdAt).toLocaleDateString(
-              "en-US",
-              { month: "short", day: "numeric" }
-            );
-            const amount = transaction.Amount;
-            const category = transaction.Category;
-            const type = transaction.type;
-
-            // Create and add the transaction element
-            const transactionElement = document.createElement("div");
-            transactionElement.className = `item-card ${type}`;
-            transactionElement.innerHTML = `
-              ${getCategoryEmoji(
-                category
-              )} ${category} - $${amount} <small>${date}</small>
-            `;
-
-            recentTransactionsContainer.appendChild(transactionElement);
-          });
-
-          // Also update the all transactions section
+          // Get the all transactions container
           const allTransactionsContainer = document.querySelector(
             ".all-expenses .item-cards"
           );
-          allTransactionsContainer.innerHTML = ""; 
+          allTransactionsContainer.innerHTML = ""; // Clear existing content
 
+          // If no transactions, show message
+          if (transactions.length === 0) {
+            const noTransactionsEl = document.createElement("div");
+            noTransactionsEl.className = "item-card";
+            noTransactionsEl.textContent = "No transactions found";
+            allTransactionsContainer.appendChild(noTransactionsEl);
+            return;
+          }
+
+          // Display all transactions with the applied sorting
           transactions.forEach((transaction) => {
             const date = new Date(transaction.createdAt).toLocaleDateString(
               "en-US",
@@ -200,13 +212,61 @@
             const transactionElement = document.createElement("div");
             transactionElement.className = `item-card ${type}`;
             transactionElement.innerHTML = `
-              ${getCategoryEmoji(
-                category
-              )} ${category} - $${amount} <small>${date}</small>
-            `;
+        ${getCategoryEmoji(
+          category
+        )} ${category} - $${amount} <small>${date}</small>
+      `;
 
             allTransactionsContainer.appendChild(transactionElement);
           });
+        } catch (error) {
+          console.error("Error loading transactions:", error);
+        }
+      }
+
+      // Function to load recent transactions
+      async function loadRecentTransactions() {
+        try {
+          const expensesResponse = await axios.get("/api/expenses");
+          const expenses = expensesResponse.data;
+
+          const incomeResponse = await axios.get("/api/income");
+          const incomes = incomeResponse.data;
+
+          // Combine and sort by date (newest first)
+          const transactions = [
+            ...expenses.map((e) => ({ ...e, type: "expense" })),
+            ...incomes.map((i) => ({ ...i, type: "income" })),
+          ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+          const recentTransactionsContainer = document.querySelector(
+            ".card:nth-child(1) #recent-transaction"
+          );
+          recentTransactionsContainer.innerHTML = "";
+
+          // Display recent transactions (limit to 5)
+          const recentTransactions = transactions.slice(0, 5);
+          recentTransactions.forEach((transaction) => {
+            const date = new Date(transaction.createdAt).toLocaleDateString(
+              "en-US",
+              { month: "short", day: "numeric" }
+            );
+            const amount = transaction.Amount;
+            const category = transaction.Category;
+            const type = transaction.type;
+
+            const transactionElement = document.createElement("div");
+            transactionElement.className = `item-card ${type}`;
+            transactionElement.innerHTML = `
+        ${getCategoryEmoji(
+          category
+        )} ${category} - $${amount} <small>${date}</small>
+      `;
+
+            recentTransactionsContainer.appendChild(transactionElement);
+          });
+
+          loadAllTransactions("date-desc");
         } catch (error) {
           console.error("Error loading transactions:", error);
         }
@@ -278,29 +338,35 @@
 
           const topCategory = sorted.slice(0, 3);
           console.log(topCategory);
-          const topCategoriesContainer = document.querySelector(".card:nth-child(2) #top-category");
+          const topCategoriesContainer = document.querySelector(
+            ".card:nth-child(2) #top-category"
+          );
           topCategoriesContainer.innerHTML = ""; // Clear existing content
 
           topCategory.forEach(([category, amount]) => {
             // Skip categories with zero amount
             if (amount <= 0) return;
-            
-            
-            const type = ["Salary", "Business", "Gifts", "Interest", "Allowance", "Other"].includes(category) 
-              ? "income" 
+
+            const type = [
+              "Salary",
+              "Business",
+              "Gifts",
+              "Interest",
+              "Allowance",
+              "Other",
+            ].includes(category)
+              ? "income"
               : "expense";
-            
-           
+
             const categoryElement = document.createElement("div");
             categoryElement.className = `item-card ${type}`;
             categoryElement.innerHTML = `
               ${getCategoryEmoji(category)} ${category} - $${amount}
             `;
-            
+
             topCategoriesContainer.appendChild(categoryElement);
           });
-          
-         
+
           if (topCategoriesContainer.children.length === 0) {
             const noDataElement = document.createElement("div");
             noDataElement.className = "item-card";
@@ -340,6 +406,13 @@
         loadSummaryData();
         loadRecentTransactions();
         loadTopCategories();
+
+        // Add listener for sorting dropdown
+        document
+          .getElementById("sort-transactions")
+          .addEventListener("change", (e) => {
+            loadAllTransactions(e.target.value);
+          });
 
         // Add logout functionality
         document.querySelector(".user-btn").addEventListener("click", () => {

@@ -72,9 +72,7 @@
         <div class="card">
           <h3>Top Categories</h3>
           <div class="item-cards" id="top-category"></div>
-            <div class="item-card income">🏠 Rent - $100</div>
-            <div class="item-card expense">📚 Education - $30</div>
-            <div class="item-card">🎮 Entertainment - $20</div>
+          
           </div>
         </div>
       </div>
@@ -139,11 +137,11 @@
       // Function to load recent transactions
       async function loadRecentTransactions() {
         try {
-          // Get expenses
+          
           const expensesResponse = await axios.get("/api/expenses");
           const expenses = expensesResponse.data;
 
-          // Get income
+         
           const incomeResponse = await axios.get("/api/income");
           const incomes = incomeResponse.data;
 
@@ -158,7 +156,7 @@
           const recentTransactionsContainer = document.querySelector(
             ".card:nth-child(1) #recent-transaction"
           );
-          recentTransactionsContainer.innerHTML = ""; // Clear existing content
+          recentTransactionsContainer.innerHTML = ""; \
 
           // Display recent transactions (limit to 5)
           const recentTransactions = transactions.slice(0, 5);
@@ -187,7 +185,7 @@
           const allTransactionsContainer = document.querySelector(
             ".all-expenses .item-cards"
           );
-          allTransactionsContainer.innerHTML = ""; // Clear existing content
+          allTransactionsContainer.innerHTML = ""; 
 
           transactions.forEach((transaction) => {
             const date = new Date(transaction.createdAt).toLocaleDateString(
@@ -280,9 +278,38 @@
 
           const topCategory = sorted.slice(0, 3);
           console.log(topCategory);
-        
+          const topCategoriesContainer = document.querySelector(".card:nth-child(2) #top-category");
+          topCategoriesContainer.innerHTML = ""; // Clear existing content
+
+          topCategory.forEach(([category, amount]) => {
+            // Skip categories with zero amount
+            if (amount <= 0) return;
+            
+            
+            const type = ["Salary", "Business", "Gifts", "Interest", "Allowance", "Other"].includes(category) 
+              ? "income" 
+              : "expense";
+            
+           
+            const categoryElement = document.createElement("div");
+            categoryElement.className = `item-card ${type}`;
+            categoryElement.innerHTML = `
+              ${getCategoryEmoji(category)} ${category} - $${amount}
+            `;
+            
+            topCategoriesContainer.appendChild(categoryElement);
+          });
+          
+         
+          if (topCategoriesContainer.children.length === 0) {
+            const noDataElement = document.createElement("div");
+            noDataElement.className = "item-card";
+            noDataElement.textContent = "No transaction data available";
+            topCategoriesContainer.appendChild(noDataElement);
+          }
         } catch {}
       }
+
       // Helper function to get emoji for category
       function getCategoryEmoji(category) {
         const emojis = {

@@ -29,6 +29,10 @@
     </div>
 
     <script>
+      const token = localStorage.getItem("token");
+      if (token) {
+        window.location.href = "/dashboard.html";
+      }
       document
         .querySelector(".register-form")
         .addEventListener("submit", async (e) => {

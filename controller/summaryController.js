@@ -1,9 +1,12 @@
 const Income = require("../models/incomeModel");
 const Expense = require("../models/expenseModel");
 const User = require("../models/userModel");
+const mongoose = require("mongoose");
 const getSummary = async (req, res) => {
   try {
+    const userId = req.user.userId;
     const totalIncome = await Income.aggregate([
+      { $match: { user: new mongoose.Types.ObjectId(userId) } },
       {
         $group: {
           _id: null,
@@ -12,6 +15,7 @@ const getSummary = async (req, res) => {
       },
     ]);
     const totalExpense = await Expense.aggregate([
+      { $match: { user: new mongoose.Types.ObjectId(userId) } },
       {
         $group: {
           _id: null,
@@ -22,6 +26,7 @@ const getSummary = async (req, res) => {
 
     const user = await User.findById(req.user.userId);
     const totalbalance = user.balance;
+    console.log(totalIncome);
 
     //calculate Expense
     res.status(200).json({

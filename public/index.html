@@ -50,7 +50,7 @@
               });
             alert("Registration successful");
 
-            window.location.href = "/login";
+            window.location.href = "/dashboard"; // redirect to dashboard
           } catch (err) {
             alert(err.response?.data?.message || "Registration failed");
           }

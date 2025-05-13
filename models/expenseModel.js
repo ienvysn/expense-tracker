@@ -7,6 +7,7 @@ const expenseSchema = new mongoose.Schema(
       type: Number,
       required: true,
       trim: true,
+      min: [0, "Income amount must be a positive number"],
     },
     Category: {
       type: String,

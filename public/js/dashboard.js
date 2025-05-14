@@ -4,7 +4,6 @@ if (!token) {
   window.location.href = "/login.html";
 }
 
-// Setup axios with authorization header
 axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
 // Function to load summary data
@@ -50,7 +49,6 @@ async function loadAllTransactions(sortBy = "date-desc") {
       ...incomes.map((i) => ({ ...i, type: "income" })),
     ];
 
-    // Sort based on selected option
     switch (sortBy) {
       case "date-desc":
         transactions.sort(
@@ -76,11 +74,10 @@ async function loadAllTransactions(sortBy = "date-desc") {
         break;
     }
 
-    // Get the all transactions container
     const allTransactionsContainer = document.querySelector(
       ".all-expenses .item-cards"
     );
-    allTransactionsContainer.innerHTML = ""; // Clear existing content
+    allTransactionsContainer.innerHTML = "";
 
     // If no transactions, show message
     if (transactions.length === 0) {
@@ -91,7 +88,6 @@ async function loadAllTransactions(sortBy = "date-desc") {
       return;
     }
 
-    // Display all transactions with the applied sorting
     transactions.forEach((transaction) => {
       const date = new Date(transaction.createdAt).toLocaleDateString("en-US", {
         month: "short",
@@ -170,7 +166,6 @@ async function loadRecentTransactions() {
   } catch (error) {
     console.error("Error loading transactions:", error);
 
-    // Display error message in the container
     const recentTransactionsContainer = document.querySelector(
       "#recent-transaction"
     );
@@ -227,7 +222,6 @@ async function loadTopCategories() {
     const incomeResponse = await axios.get("/api/income");
     const incomes = incomeResponse.data;
 
-    // console.log(expenses);
     const transactions = [
       ...expenses.map((e) => ({ ...e, type: "expense" })),
       ...incomes.map((i) => ({ ...i, type: "income" })),
@@ -250,10 +244,9 @@ async function loadTopCategories() {
     const topCategoriesContainer = document.querySelector(
       ".card:nth-child(2) #top-category"
     );
-    topCategoriesContainer.innerHTML = ""; // Clear existing content
+    topCategoriesContainer.innerHTML = "";
 
     topCategory.forEach(([category, amount]) => {
-      // Skip categories with zero amount
       if (amount <= 0) return;
 
       const type = [
@@ -316,7 +309,6 @@ window.addEventListener("DOMContentLoaded", () => {
   loadRecentTransactions();
   loadTopCategories();
 
-  // Add listener for sorting dropdown
   document
     .getElementById("sort-transactions")
     .addEventListener("change", (e) => {
@@ -324,7 +316,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
   // Add logout functionality
-  document.querySelector(".user-btn").addEventListener("click", () => {
+  document.querySelector(".logout-btn").addEventListener("click", () => {
     localStorage.removeItem("token");
     window.location.href = "/login.html";
   });

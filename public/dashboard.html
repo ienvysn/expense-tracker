@@ -17,8 +17,9 @@
         <div class="nav-link active">Dashboard</div>
         <div class="nav-link">Income</div>
         <div class="nav-link">Expense</div>
+        <div class="nav-link" id="profile">Profile</div>
       </div>
-      <button class="user-btn">User</button>
+      <button class="logout-btn">Logout</button>
     </aside>
 
     <main>
@@ -91,8 +92,116 @@
         </div>
       </div>
     </main>
+    <div id="profile-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Profile Settings</h2>
+          <span class="close-modal">&times;</span>
+        </div>
+
+        <div class="modal-tabs">
+          <button class="tab-btn active" data-tab="profile-info">
+            Profile Info
+          </button>
+          <button class="tab-btn" data-tab="settings">Settings</button>
+        </div>
+
+        <div class="tab-content active" id="profile-info">
+          <div class="profile-section">
+            <h3>User Information</h3>
+            <form id="profile-form">
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input
+                  type="text"
+                  id="profile-username"
+                  placeholder="Username"
+                />
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input
+                  type="email"
+                  id="profile-email"
+                  placeholder="Email"
+                  readonly
+                />
+              </div>
+              <button type="submit" class="save-btn">Save Changes</button>
+            </form>
+          </div>
+
+          <div class="profile-section">
+            <h3>Change Password</h3>
+            <form id="password-form">
+              <div class="form-group">
+                <label for="current-password">Current Password</label>
+                <input
+                  type="password"
+                  id="current-password"
+                  placeholder="Current Password"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="new-password">New Password</label>
+                <input
+                  type="password"
+                  id="new-password"
+                  placeholder="New Password"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="confirm-password">Confirm New Password</label>
+                <input
+                  type="password"
+                  id="confirm-password"
+                  placeholder="Confirm New Password"
+                  required
+                />
+              </div>
+              <button type="submit" class="save-btn">Update Password</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="tab-content" id="settings">
+          <div class="profile-section">
+            <h3>Application Settings</h3>
+            <form id="settings-form">
+              <div class="form-group">
+                <label for="currency">Currency</label>
+                <select id="currency">
+                  <option value="USD">USD ($)</option>
+                  <option value="EUR">EUR (€)</option>
+                  <option value="GBP">GBP (£)</option>
+                  <option value="JPY">JPY (¥)</option>
+                  <option value="INR">INR (₹)</option>
+                  <option value="CAD">CAD (C$)</option>
+                  <option value="AUD">AUD (A$)</option>
+                </select>
+              </div>
+              <button type="submit" class="save-btn">Save Settings</button>
+            </form>
+          </div>
+
+          <div class="profile-section danger-zone">
+            <h3>Danger Zone</h3>
+            <p>
+              Once you delete your account, there is no going back. Please be
+              certain.
+            </p>
+            <button id="delete-account" class="delete-btn">
+              Delete Account
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="js/dashboard.js"></script>
+    <script src="js/modal.js"></script>
   </body>
 </html>

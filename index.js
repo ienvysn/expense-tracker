@@ -19,6 +19,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.get("/dashboard", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "dashboard.html"));
 });
+app.get("/income", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "income.html"));
+});
 
 // app.get("*", (req, res) => {
 //   res.sendFile(path.join(__dirname, "public", "index.html"));

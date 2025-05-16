@@ -572,3 +572,58 @@ main {
     text-align: left;
   }
 }
+
+.add-transaction-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  background-color: var(--accent);
+  color: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 900;
+}
+
+.add-transaction-btn:hover {
+  transform: scale(1.1);
+  background-color: #ff8a8a;
+}
+
+.add-transaction-btn:active {
+  transform: scale(0.95);
+}
+
+#add-transaction-modal .modal-content {
+  animation: slideUp 0.4s ease;
+  display: block;
+}
+
+/* Animation for the modal */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .add-transaction-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    bottom: 20px;
+    right: 20px;
+  }
+}

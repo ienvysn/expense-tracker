@@ -265,3 +265,38 @@
     text-align: left;
   }
 }
+
+/* Each Transaction */
+.transaction-detail {
+  margin-bottom: 20px;
+}
+
+.detail-row {
+  display: flex;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.detail-label {
+  font-weight: bold;
+  width: 120px;
+}
+
+.detail-value {
+  flex: 1;
+}
+
+.transaction-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.item-card {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.item-card:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}

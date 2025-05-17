@@ -287,6 +287,44 @@
 
     <!-- Add Transaction Button -->
     <div class="add-transaction-btn">+</div>
+    <!-- Transaction Details Modal -->
+    <div id="transaction-details-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Transaction Details</h2>
+          <span class="close-modal" id="close-transaction-details"
+            >&times;</span
+          >
+        </div>
+        <div class="modal-body">
+          <div class="transaction-detail">
+            <div class="detail-row">
+              <span class="detail-label">Type:</span>
+              <span class="detail-value" id="detail-type"></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Amount:</span>
+              <span class="detail-value" id="detail-amount"></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Category:</span>
+              <span class="detail-value" id="detail-category"></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Description:</span>
+              <span class="detail-value" id="detail-description"></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Date:</span>
+              <span class="detail-value" id="detail-date"></span>
+            </div>
+          </div>
+          <div class="transaction-actions">
+            <button id="delete-transaction" class="delete-btn">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="js/dashboard.js"></script>

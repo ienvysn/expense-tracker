@@ -90,6 +90,7 @@ async function loadAllTransactions(sortBy = "date-desc", page = 1) {
     currentPage = page;
     displayTransactionsPage(currentPage);
     renderPaginationControls();
+    addTransactionCardListeners();
   } catch (error) {
     console.error("Error loading transactions:", error);
   }
@@ -254,6 +255,7 @@ async function loadRecentTransactions() {
     }
 
     loadAllTransactions("date-desc");
+    addTransactionCardListeners();
   } catch (error) {
     console.error("Error loading transactions:", error);
 
@@ -394,6 +396,135 @@ function getCategoryEmoji(category) {
   return emojis[category] || "📊";
 }
 
+let currentTransaction = null;
+
+// Function to show transaction details
+function showTransactionDetails(transaction) {
+  currentTransaction = transaction;
+
+  // Populate the modal with transaction details
+  document.getElementById("detail-type").textContent =
+    transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1);
+  document.getElementById(
+    "detail-amount"
+  ).textContent = `$${transaction.Amount}`;
+  document.getElementById("detail-category").textContent = `${getCategoryEmoji(
+    transaction.Category
+  )} ${transaction.Category}`;
+  document.getElementById("detail-description").textContent =
+    transaction.Description || "No description";
+
+  const date = new Date(transaction.createdAt);
+  const formattedDate = date.toLocaleString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  document.getElementById("detail-date").textContent = formattedDate;
+
+  // Style based on transaction type
+  const detailType = document.getElementById("detail-type");
+  if (transaction.type === "income") {
+    detailType.style.color = "#4CAF50";
+  } else {
+    detailType.style.color = "#F44336";
+  }
+
+  // Show the modal
+  const modal = document.getElementById("transaction-details-modal");
+  modal.style.display = "block";
+}
+
+// Add click event listeners to transaction cards
+function addTransactionCardListeners() {
+  // Get all transaction cards
+  const allTransactionCards = document.querySelectorAll(
+    ".all-expenses .item-card"
+  );
+  const recentTransactionCards = document.querySelectorAll(
+    "#recent-transaction .item-card"
+  );
+
+  // Add click event to recent transactions
+  recentTransactionCards.forEach((card, index) => {
+    card.addEventListener("click", () => {
+      const sortedTransactions = [...allTransactionsData].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      if (
+        sortedTransactions.length > 0 &&
+        index < Math.min(sortedTransactions.length, 5)
+      ) {
+        showTransactionDetails(sortedTransactions[index]);
+      }
+    });
+  });
+
+  // Add click event to all transactions
+  allTransactionCards.forEach((card, index) => {
+    card.addEventListener("click", () => {
+      const startIndex = (currentPage - 1) * transactionsPerPage;
+      const transactionIndex = startIndex + index;
+
+      if (transactionIndex < allTransactionsData.length) {
+        showTransactionDetails(allTransactionsData[transactionIndex]);
+      }
+    });
+  });
+}
+
+// Function to delete transaction
+async function deleteTransaction() {
+  if (!currentTransaction) return;
+
+  try {
+    let endpoint;
+    if (currentTransaction.type === "income") {
+      endpoint = `/api/income/${currentTransaction._id}`;
+    } else {
+      endpoint = `/api/expenses/${currentTransaction._id}`;
+    }
+
+    await axios.delete(endpoint);
+
+    // Close the modal
+    document.getElementById("transaction-details-modal").style.display = "none";
+
+    loadSummaryData();
+    loadRecentTransactions();
+    loadTopCategories();
+
+    alert("Transaction deleted successfully");
+  } catch (error) {
+    console.error("Error deleting transaction:", error);
+    alert("Failed to delete transaction");
+  }
+}
+
+// Setup modal close and delete button functionality
+function setupTransactionDetailsModal() {
+  const modal = document.getElementById("transaction-details-modal");
+  const closeBtn = document.getElementById("close-transaction-details");
+  const deleteBtn = document.getElementById("delete-transaction");
+
+  // Close the modal when clicking the X
+  closeBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+  });
+
+  // Close the modal when clicking outside of it
+  window.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  });
+
+  // Handle delete button click
+  deleteBtn.addEventListener("click", deleteTransaction);
+}
 // Load data when page loads
 window.addEventListener("DOMContentLoaded", () => {
   loadSummaryData();
@@ -405,8 +536,9 @@ window.addEventListener("DOMContentLoaded", () => {
     .addEventListener("change", (e) => {
       loadAllTransactions(e.target.value, 1); // Reset to first page when sorting
     });
+  setupTransactionDetailsModal();
 
-  // Add logout functionality
+  // logout
   document.querySelector(".logout-btn").addEventListener("click", () => {
     localStorage.removeItem("token");
     window.location.href = "/login.html";

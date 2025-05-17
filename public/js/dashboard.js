@@ -6,6 +6,11 @@ if (!token) {
 
 axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
+// Global variables for pagination
+let currentPage = 1;
+let transactionsPerPage = 7;
+let allTransactionsData = []; // Store all transactions data
+
 // Function to load summary data
 async function loadSummaryData() {
   try {
@@ -33,7 +38,7 @@ async function loadSummaryData() {
   }
 }
 
-async function loadAllTransactions(sortBy = "date-desc") {
+async function fetchAllTransactionsData(sortBy = "date-desc") {
   try {
     // Get expenses
     const expensesResponse = await axios.get("/api/expenses");
@@ -66,51 +71,137 @@ async function loadAllTransactions(sortBy = "date-desc") {
       case "amount-asc":
         transactions.sort((a, b) => a.Amount - b.Amount);
         break;
-      case "category":
-        transactions.sort((a, b) => a.Category.localeCompare(b.Category));
-        break;
+
       case "type":
         transactions.sort((a, b) => a.type.localeCompare(b.type));
         break;
     }
 
-    const allTransactionsContainer = document.querySelector(
-      ".all-expenses .item-cards"
-    );
-    allTransactionsContainer.innerHTML = "";
+    return transactions;
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
+    return [];
+  }
+}
 
-    // If no transactions, show message
-    if (transactions.length === 0) {
-      const noTransactionsEl = document.createElement("div");
-      noTransactionsEl.className = "item-card";
-      noTransactionsEl.textContent = "No transactions found";
-      allTransactionsContainer.appendChild(noTransactionsEl);
-      return;
-    }
-
-    transactions.forEach((transaction) => {
-      const date = new Date(transaction.createdAt).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-      });
-      const amount = transaction.Amount;
-      const category = transaction.Category;
-      const type = transaction.type;
-
-      // Create and add the transaction element
-      const transactionElement = document.createElement("div");
-      transactionElement.className = `item-card ${type}`;
-      transactionElement.innerHTML = `
-        ${getCategoryEmoji(
-          category
-        )} ${category} - $${amount} <small>${date}</small>
-      `;
-
-      allTransactionsContainer.appendChild(transactionElement);
-    });
+async function loadAllTransactions(sortBy = "date-desc", page = 1) {
+  try {
+    allTransactionsData = await fetchAllTransactionsData(sortBy);
+    currentPage = page;
+    displayTransactionsPage(currentPage);
+    renderPaginationControls();
   } catch (error) {
     console.error("Error loading transactions:", error);
   }
+}
+
+function displayTransactionsPage(page) {
+  const startIndex = (page - 1) * transactionsPerPage;
+  const endIndex = startIndex + transactionsPerPage;
+  const paginatedTransactions = allTransactionsData.slice(startIndex, endIndex);
+
+  const allTransactionsContainer = document.querySelector(
+    ".all-expenses .item-cards"
+  );
+  allTransactionsContainer.innerHTML = "";
+
+  // If no transactions, show message
+  if (allTransactionsData.length === 0) {
+    const noTransactionsEl = document.createElement("div");
+    noTransactionsEl.className = "item-card";
+    noTransactionsEl.textContent = "No transactions found";
+    allTransactionsContainer.appendChild(noTransactionsEl);
+    return;
+  }
+
+  paginatedTransactions.forEach((transaction) => {
+    const date = new Date(transaction.createdAt).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    });
+    const amount = transaction.Amount;
+    const category = transaction.Category;
+    const type = transaction.type;
+
+    // Create and add the transaction element
+    const transactionElement = document.createElement("div");
+    transactionElement.className = `item-card ${type}`;
+    transactionElement.innerHTML = `
+      ${getCategoryEmoji(
+        category
+      )} ${category} - $${amount} <small>${date}</small>
+    `;
+
+    allTransactionsContainer.appendChild(transactionElement);
+  });
+}
+
+function renderPaginationControls() {
+  // Check if pagination container exists, if not create it
+  let paginationContainer = document.getElementById("pagination-container");
+  if (!paginationContainer) {
+    paginationContainer = document.createElement("div");
+    paginationContainer.id = "pagination-container";
+    paginationContainer.className = "pagination";
+
+    // Insert after the item-cards div
+    const itemCardsContainer = document.querySelector(
+      ".all-expenses .item-cards"
+    );
+    itemCardsContainer.parentNode.insertBefore(
+      paginationContainer,
+      itemCardsContainer.nextSibling
+    );
+  }
+
+  // Clear existing pagination controls
+  paginationContainer.innerHTML = "";
+
+  const totalPages = Math.ceil(
+    allTransactionsData.length / transactionsPerPage
+  );
+
+  if (totalPages <= 1) {
+    // No need for pagination if there's only one page or no data
+    paginationContainer.style.display = "none";
+    return;
+  } else {
+    paginationContainer.style.display = "flex";
+  }
+
+  // Previous button
+  const prevButton = document.createElement("button");
+  prevButton.className = "pagination-btn prev";
+  prevButton.textContent = "Previous";
+  prevButton.disabled = currentPage === 1;
+  prevButton.addEventListener("click", () => {
+    if (currentPage > 1) {
+      displayTransactionsPage(currentPage - 1);
+      currentPage--;
+      renderPaginationControls();
+    }
+  });
+  paginationContainer.appendChild(prevButton);
+
+  // Page information
+  const pageInfo = document.createElement("div");
+  pageInfo.className = "pagination-info";
+  pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+  paginationContainer.appendChild(pageInfo);
+
+  // Next button
+  const nextButton = document.createElement("button");
+  nextButton.className = "pagination-btn next";
+  nextButton.textContent = "Next";
+  nextButton.disabled = currentPage === totalPages;
+  nextButton.addEventListener("click", () => {
+    if (currentPage < totalPages) {
+      displayTransactionsPage(currentPage + 1);
+      currentPage++;
+      renderPaginationControls();
+    }
+  });
+  paginationContainer.appendChild(nextButton);
 }
 
 // Function to load recent transactions
@@ -312,7 +403,7 @@ window.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("sort-transactions")
     .addEventListener("change", (e) => {
-      loadAllTransactions(e.target.value);
+      loadAllTransactions(e.target.value, 1); // Reset to first page when sorting
     });
 
   // Add logout functionality

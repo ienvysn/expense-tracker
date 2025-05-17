@@ -29,12 +29,9 @@ const getExpenses = async (req, res) => {
 
     const filter = {};
 
-    // If a category is provided, add it to the filter
     if (category) {
       filter.category = category;
     }
-
-    // Fetch expenses for the authenticated user, with optional category filter and sorting
     const expenses = await Expense.find({
       user: req.user.userId,
       ...filter,
@@ -49,17 +46,30 @@ const getExpenses = async (req, res) => {
 const deleteExpense = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id);
 
-    const deleted = await Expense.findByIdAndDelete({
+    // First find the expense to get its amount before deletion
+    const expense = await Expense.findOne({
       user: req.user.userId,
       _id: id,
     });
-    if (!deleted) {
+
+    if (!expense) {
       return res.status(404).json({ error: "Expense not found" });
     }
+
+    // Store the amount to refund to balance
+    const amountToRefund = expense.Amount;
+
+    await Expense.findByIdAndDelete(id);
+
+    // Update user balance (add the expense amount back)
+    await User.findByIdAndUpdate(req.user.userId, {
+      $inc: { balance: amountToRefund },
+    });
+
     res.status(200).json({ message: "Expense deleted successfully" });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: "Failed to delete expense" });
   }
 };

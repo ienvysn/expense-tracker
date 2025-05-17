@@ -46,18 +46,30 @@ const getIncome = async (req, res) => {
 const deleteIncome = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id);
 
-    const deleted = await Income.findByIdAndDelete({
+    // First find the income to get its amount before deletion
+    const income = await Income.findOne({
       user: req.user.userId,
       _id: id,
     });
-    if (!deleted) {
+
+    if (!income) {
       return res.status(404).json({ error: "Income not found" });
     }
+
+    // Store the amount to subtract from balance
+    const amountToSubtract = income.Amount;
+    await Income.findByIdAndDelete(id);
+
+    // Update user balance (subtract the income amount)
+    await User.findByIdAndUpdate(req.user.userId, {
+      $inc: { balance: -amountToSubtract },
+    });
+
     res.status(200).json({ message: "Income deleted successfully" });
   } catch (err) {
-    res.status(500).json({ error: "Income to delete Income" });
+    console.error(err);
+    res.status(500).json({ error: "Failed to delete income" });
   }
 };
 

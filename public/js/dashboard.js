@@ -18,7 +18,7 @@ async function loadSummaryData() {
     console.log(response);
     const { totalIncome, totalExpense, totalbalance } = response.data;
     console.log(totalIncome, totalExpense);
-    // Update the UI
+
     document.querySelector(
       ".card:nth-child(1) .summary-text"
     ).textContent = `$${totalbalance}`;

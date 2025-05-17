@@ -430,7 +430,7 @@ function showTransactionDetails(transaction) {
   if (transaction.type === "income") {
     detailType.style.color = "#4CAF50";
   } else {
-    detailType.style.color = "#F44336";
+    detailType.style.color = "#d32f2f";
   }
 
   // Show the modal

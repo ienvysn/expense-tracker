@@ -300,3 +300,83 @@
 .item-card:hover {
   background-color: rgba(0, 0, 0, 0.05);
 }
+
+.modal-body {
+  padding: 28px 28px 18px 28px;
+  background: transparent;
+}
+.transaction-detail {
+  margin-bottom: 18px;
+  background: #1e1e1e;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #0000000a;
+  padding: 0;
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  padding: 13px 0;
+  border-bottom: 1px solid #292929;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+.detail-label {
+  font-weight: 600;
+  color: #bdbdbd;
+  width: 110px;
+  font-size: 1rem;
+  letter-spacing: 0.1px;
+}
+.detail-value {
+  flex: 1;
+  color: #f3f3f3;
+  font-size: 1.05rem;
+  word-break: break-word;
+}
+
+#detail-type {
+  font-weight: bold;
+  font-size: 1.08rem;
+  letter-spacing: 0.2px;
+}
+#detail-amount {
+  font-weight: bold;
+  font-size: 1.08rem;
+}
+
+#detail-category {
+  font-size: 1.02rem;
+}
+
+#detail-description {
+  color: #cfcfcf;
+  font-size: 0.98rem;
+}
+
+#detail-date {
+  color: #b0b0b0;
+  font-size: 0.97rem;
+}
+
+/* Actions */
+.transaction-actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.delete-btn {
+  background: #f44336;
+  color: #fff;
+  border: none;
+  padding: 11px 22px;
+  border-radius: 7px;
+  font-weight: bold;
+  font-size: 0.98rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #f443360d;
+}

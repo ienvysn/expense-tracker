@@ -1,6 +1,7 @@
 // Check if token exists
 const token = localStorage.getItem("token");
 if (!token) {
+  console.log("o tokeonnnn ");
   window.location.href = "/login.html";
 }
 
@@ -30,11 +31,6 @@ async function loadSummaryData() {
     ).textContent = `$${totalExpense}`;
   } catch (error) {
     console.error("Error loading summary data:", error);
-    if (error.response && error.response.status === 401) {
-      // Token expired or invalid
-      localStorage.removeItem("token");
-      window.location.href = "/login.html";
-    }
   }
 }
 
@@ -100,7 +96,7 @@ function displayTransactionsPage(page) {
   const startIndex = (page - 1) * transactionsPerPage;
   const endIndex = startIndex + transactionsPerPage;
   const paginatedTransactions = allTransactionsData.slice(startIndex, endIndex);
-
+  console.log();
   const allTransactionsContainer = document.querySelector(
     ".all-expenses .item-cards"
   );
@@ -266,7 +262,7 @@ async function loadRecentTransactions() {
 
     const errorEl = document.createElement("div");
     errorEl.className = "item-card";
-    errorEl.textContent = "Error loading transactions";
+    errorEl.textContent = "No Transaction Available";
     recentTransactionsContainer.appendChild(errorEl);
   }
 }
@@ -334,10 +330,6 @@ async function loadTopCategories() {
 
     const topCategory = sorted.slice(0, 3);
     console.log(topCategory);
-    const topCategoriesContainer = document.querySelector(
-      ".card:nth-child(2) #top-category"
-    );
-    topCategoriesContainer.innerHTML = "";
 
     topCategory.forEach(([category, amount]) => {
       if (amount <= 0) return;
@@ -368,7 +360,16 @@ async function loadTopCategories() {
       noDataElement.textContent = "No transaction data available";
       topCategoriesContainer.appendChild(noDataElement);
     }
-  } catch {}
+  } catch {
+    const topCategoriesContainer = document.querySelector(
+      ".card:nth-child(2) #top-category"
+    );
+    topCategoriesContainer.innerHTML = "";
+    const noDataElement = document.createElement("div");
+    noDataElement.className = "item-card";
+    noDataElement.textContent = "No Transaction Available";
+    topCategoriesContainer.appendChild(noDataElement);
+  }
 }
 
 // Helper function to get emoji for category
@@ -530,6 +531,7 @@ window.addEventListener("DOMContentLoaded", () => {
   loadSummaryData();
   loadRecentTransactions();
   loadTopCategories();
+  displayTransactionsPage();
 
   document
     .getElementById("sort-transactions")

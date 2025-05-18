@@ -207,3 +207,23 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
+settingsForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const currency = document.getElementById("currency").value;
+
+  try {
+    await axios.put("/api/settings", { currency });
+    userData.settings.currency = currency;
+    localStorage.setItem("currency", currency);
+
+    showNotification("Settings updated successfully!");
+    loadSummaryData();
+    loadRecentTransactions();
+    loadAllTransactions("date-desc");
+  } catch (error) {
+    console.error("Error updating settings:", error);
+    showNotification("Failed to update settings", "error");
+  }
+});

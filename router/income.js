@@ -5,7 +5,6 @@ const router = express.Router();
 const {
   addIncome,
   getIncome,
-
   deleteIncome,
 } = require("../controller/incomeController");
 

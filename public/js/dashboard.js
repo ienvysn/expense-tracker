@@ -11,6 +11,7 @@ axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 let currentPage = 1;
 let transactionsPerPage = 7;
 let allTransactionsData = []; // Store all transactions data
+let userCurrency = localStorage.getItem("currency") || "USD";
 
 // Function to load summary data
 async function loadSummaryData() {

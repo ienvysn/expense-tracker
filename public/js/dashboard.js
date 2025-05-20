@@ -527,6 +527,8 @@ function setupTransactionDetailsModal() {
   // Handle delete button click
   deleteBtn.addEventListener("click", deleteTransaction);
 }
+
+
 // Load data when page loads
 window.addEventListener("DOMContentLoaded", () => {
   loadSummaryData();

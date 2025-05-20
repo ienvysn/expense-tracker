@@ -3,8 +3,8 @@ const expenseRouter = require("./router/expense");
 const authRoutes = require("./router/auth");
 const incomeRoutes = require("./router/income");
 const balanceRoutes = require("./router/balance");
-const SummaryRoutes = require("./router/summary");
-const settingRoutes = require("./router/settings");
+const summaryRoutes = require("./router/summary");
+const currencyRoutes = require("./router/currency");
 const connectDB = require("./db/db");
 const path = require("path");
 const app = express();
@@ -14,8 +14,8 @@ app.use("/api/expenses", expenseRouter);
 app.use("/api/auth", authRoutes);
 app.use("/api/income", incomeRoutes);
 app.use("/api/balance", balanceRoutes);
-app.use("/api/summary", SummaryRoutes);
-app.use("/api/settings", settingRoutes);
+app.use("/api/summary", summaryRoutes);
+app.use("/api/currency", currencyRoutes);
 
 app.use(express.static(path.join(__dirname, "public")));
 app.get("/dashboard", (req, res) => {

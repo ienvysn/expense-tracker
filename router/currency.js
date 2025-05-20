@@ -5,9 +5,9 @@ const router = express.Router();
 const {
   currencyGet,
   currencyUpdate,
-} = require("../controller/settingsController");
+} = require("../controller/currencyController");
 
 router.get("/", protect, currencyGet);
-router.put("/", protect, currencyUpdate);
+router.post("/", protect, currencyUpdate);
 
 module.exports = router;

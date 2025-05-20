@@ -1,4 +1,4 @@
-const profileNavLink = document.querySelector(".nav-link:nth-child(5)");
+const profileNavLink = document.querySelector(".nav-link:nth-child(5)"); // Profile nav link
 const profileModal = document.getElementById("profile-modal");
 const closeModalBtn = document.querySelector(".close-modal");
 const tabButtons = document.querySelectorAll(".tab-btn");

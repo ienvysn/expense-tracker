@@ -9,26 +9,26 @@ const settingsForm = document.getElementById("settings-form");
 const deleteAccountBtn = document.getElementById("delete-account");
 
 // Fetch user data
-async function fetchUserData() {
-  try {
-    userData = {
-      username: "JohnDoe",
-      email: "john.doe@example.com",
-      settings: {
-        currency: "USD",
-      },
-    };
+// async function fetchUserData() {
+//   try {
+//     userData = {
+//       username: "JohnDoe",
+//       email: "john.doe@example.com",
+//       settings: {
+//         currency: "USD",
+//       },
+//     };
 
-    document.getElementById("profile-username").value = userData.username;
-    document.getElementById("profile-email").value = userData.email;
-    document.getElementById("currency").value = userData.settings.currency;
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-    alert("Failed to load user data. Please try again.");
-  }
-}
+//     document.getElementById("profile-username").value = userData.username;
+//     document.getElementById("profile-email").value = userData.email;
+//     document.getElementById("currency").value = userData.settings.currency;
+//   } catch (error) {
+//     console.error("Error fetching user data:", error);
+//     alert("Failed to load user data. Please try again.");
+//   }
+// }
 
-// Event Listeners
+// // Event Listeners
 // Open modal when profile link is clicked
 profileNavLink.addEventListener("click", () => {
   profileModal.style.display = "block";
@@ -58,50 +58,50 @@ tabButtons.forEach((button) => {
 });
 
 // Profile form submission
-profileForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
+// profileForm.addEventListener("submit", async (e) => {
+//   e.preventDefault();
 
-  const username = document.getElementById("profile-username").value;
+//   const username = document.getElementById("profile-username").value;
 
-  try {
-    // In a real implementation, this would be an API call
-    // await axios.put('/api/auth/update-profile', { username });
+//   try {
+//     // In a real implementation, this would be an API call
+//     // await axios.put('/api/auth/update-profile', { username });
 
-    // Update local user data
-    userData.username = username;
+//     // Update local user data
+//     userData.username = username;
 
-    showNotification("Profile updated successfully!");
-  } catch (error) {
-    console.error("Error updating profile:", error);
-    showNotification("Failed to update profile", "error");
-  }
-});
+//     showNotification("Profile updated successfully!");
+//   } catch (error) {
+//     console.error("Error updating profile:", error);
+//     showNotification("Failed to update profile", "error");
+//   }
+// });
 
 // Password form submission
-passwordForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
+// passwordForm.addEventListener("submit", async (e) => {
+//   e.preventDefault();
 
-  const currentPassword = document.getElementById("current-password").value;
-  const newPassword = document.getElementById("new-password").value;
-  const confirmPassword = document.getElementById("confirm-password").value;
+//   const currentPassword = document.getElementById("current-password").value;
+//   const newPassword = document.getElementById("new-password").value;
+//   const confirmPassword = document.getElementById("confirm-password").value;
 
-  if (newPassword !== confirmPassword) {
-    showNotification("New passwords do not match", "error");
-    return;
-  }
+//   if (newPassword !== confirmPassword) {
+//     showNotification("New passwords do not match", "error");
+//     return;
+//   }
 
-  try {
-    // Clear password fields
-    document.getElementById("current-password").value = "";
-    document.getElementById("new-password").value = "";
-    document.getElementById("confirm-password").value = "";
+//   try {
+//     // Clear password fields
+//     document.getElementById("current-password").value = "";
+//     document.getElementById("new-password").value = "";
+//     document.getElementById("confirm-password").value = "";
 
-    showNotification("Password changed successfully!");
-  } catch (error) {
-    console.error("Error changing password:", error);
-    showNotification("Failed to change password", "error");
-  }
-});
+//     showNotification("Password changed successfully!");
+//   } catch (error) {
+//     console.error("Error changing password:", error);
+//     showNotification("Failed to change password", "error");
+//   }
+// });
 
 settingsForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -109,18 +109,16 @@ settingsForm.addEventListener("submit", async (e) => {
   const currency = document.getElementById("currency").value;
 
   try {
-    // In a real implementation, this would be an API call
-    // await axios.put('/api/auth/update-settings', {
-    //   settings: { currency }
-    // });
-
-    // Update local settings
-    userData.settings.currency = currency;
-
+    // Update currency via API
+    const response = await axios.post("/api/currency", { currency });
+    
+    // Update local storage
+    localStorage.setItem("currency", currency);
+    
+    // Update currency display across the dashboard
+    updateCurrencyDisplay(currency);
+    
     showNotification("Settings updated successfully!");
-
-    // In a real app, you might want to refresh the dashboard here
-    // to display the new currency symbol
   } catch (error) {
     console.error("Error updating settings:", error);
     showNotification("Failed to update settings", "error");
@@ -207,18 +205,3 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
-
-settingsForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const currency = document.getElementById("currency").value;
-
-  try {
-    const updateCurrencyResponse = await axios.post("/api/currency");
-    currency = updateCurrencyResponse.data.currency;
-    localStorage.setItem("currency", currency);
-  } catch (error) {
-    console.error("Error updating settings:", error);
-    showNotification("Failed to update settings", "error");
-  }
-});

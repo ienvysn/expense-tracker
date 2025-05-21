@@ -1,7 +1,6 @@
 // Check if token exists
 const token = localStorage.getItem("token");
 if (!token) {
-  console.log("o tokeonnnn ");
   window.location.href = "/login.html";
 }
 
@@ -13,23 +12,56 @@ let transactionsPerPage = 7;
 let allTransactionsData = []; // Store all transactions data
 let userCurrency = localStorage.getItem("currency") || "USD";
 
+// Function to format amount with currency symbol
+function formatCurrency(amount, currency = userCurrency) {
+  const symbols = {
+    'USD': '$',
+    'EUR': '€',
+    'GBP': '£',
+    'JPY': '¥',
+    'INR': '₹',
+    'CAD': 'C$',
+    'AUD': 'A$'
+  };
+  return `${symbols[currency] || '$'}${amount}`;
+}
+
+// Function to update all currency displays on the dashboard
+function updateCurrencyDisplay(newCurrency) {
+  userCurrency = newCurrency;
+  
+  // Update summary cards
+  const totalBalance = document.querySelector(".card:nth-child(1) .summary-text");
+  const totalIncome = document.querySelector(".card:nth-child(2) .summary-text");
+  const totalExpense = document.querySelector(".card:nth-child(3) .summary-text");
+  
+  if (totalBalance) {
+    const amount = totalBalance.textContent.replace(/[^0-9.-]+/g, "");
+    totalBalance.textContent = formatCurrency(amount);
+  }
+  if (totalIncome) {
+    const amount = totalIncome.textContent.replace(/[^0-9.-]+/g, "");
+    totalIncome.textContent = formatCurrency(amount);
+  }
+  if (totalExpense) {
+    const amount = totalExpense.textContent.replace(/[^0-9.-]+/g, "");
+    totalExpense.textContent = formatCurrency(amount);
+  }
+  
+  // Refresh transactions to update their currency display
+  loadRecentTransactions();
+  loadAllTransactions(document.getElementById("sort-transactions").value);
+}
+
 // Function to load summary data
 async function loadSummaryData() {
   try {
     const response = await axios.get("/api/summary");
-    console.log(response);
     const { totalIncome, totalExpense, totalbalance } = response.data;
-    console.log(totalIncome, totalExpense);
 
-    document.querySelector(
-      ".card:nth-child(1) .summary-text"
-    ).textContent = `$${totalbalance}`;
-    document.querySelector(
-      ".card:nth-child(2) .summary-text"
-    ).textContent = `$${totalIncome}`;
-    document.querySelector(
-      ".card:nth-child(3) .summary-text"
-    ).textContent = `$${totalExpense}`;
+    document.querySelector(".card:nth-child(1) .summary-text").textContent = formatCurrency(totalbalance);
+    document.querySelector(".card:nth-child(2) .summary-text").textContent = formatCurrency(totalIncome);
+    document.querySelector(".card:nth-child(3) .summary-text").textContent = formatCurrency(totalExpense);
   } catch (error) {
     console.error("Error loading summary data:", error);
   }
@@ -97,7 +129,6 @@ function displayTransactionsPage(page) {
   const startIndex = (page - 1) * transactionsPerPage;
   const endIndex = startIndex + transactionsPerPage;
   const paginatedTransactions = allTransactionsData.slice(startIndex, endIndex);
-  console.log();
   const allTransactionsContainer = document.querySelector(
     ".all-expenses .item-cards"
   );
@@ -127,7 +158,7 @@ function displayTransactionsPage(page) {
     transactionElement.innerHTML = `
       ${getCategoryEmoji(
         category
-      )} ${category} - $${amount} <small>${date}</small>
+      )} ${category} - ${formatCurrency(amount)} <small>${date}</small>
     `;
 
     allTransactionsContainer.appendChild(transactionElement);
@@ -242,29 +273,17 @@ async function loadRecentTransactions() {
         const transactionElement = document.createElement("div");
         transactionElement.className = `item-card ${type}`;
         transactionElement.innerHTML = `
-          ${getCategoryEmoji(
-            category
-          )} ${category} - $${amount} <small>${date}</small>
+          ${getCategoryEmoji(category)} ${category} - ${formatCurrency(amount)} <small>${date}</small>
         `;
 
         recentTransactionsContainer.appendChild(transactionElement);
       });
     }
 
-    loadAllTransactions("date-desc");
+    loadAllTransactions(document.getElementById("sort-transactions").value);
     addTransactionCardListeners();
   } catch (error) {
-    console.error("Error loading transactions:", error);
-
-    const recentTransactionsContainer = document.querySelector(
-      "#recent-transaction"
-    );
-    recentTransactionsContainer.innerHTML = "";
-
-    const errorEl = document.createElement("div");
-    errorEl.className = "item-card";
-    errorEl.textContent = "No Transaction Available";
-    recentTransactionsContainer.appendChild(errorEl);
+    console.error("Error loading recent transactions:", error);
   }
 }
 
@@ -319,19 +338,20 @@ async function loadTopCategories() {
 
     transactions.forEach((transaction) => {
       cat = transaction.Category;
-
-      // console.log(categoriesSum.Category);
       categoriesSum[cat] += transaction.Amount;
     });
 
     //sort
-    console.log(categoriesSum);
     const sorted = Object.entries(categoriesSum).sort((a, b) => b[1] - a[1]);
-    console.log(sorted);
 
     const topCategory = sorted.slice(0, 3);
-    console.log(topCategory);
-
+    const topCategoriesContainer = document.querySelector(
+      ".card:nth-child(2) #top-category"
+    );
+    
+    // Clear existing content before adding new categories
+    topCategoriesContainer.innerHTML = "";
+  
     topCategory.forEach(([category, amount]) => {
       if (amount <= 0) return;
 
@@ -345,26 +365,18 @@ async function loadTopCategories() {
       ].includes(category)
         ? "income"
         : "expense";
-
       const categoryElement = document.createElement("div");
       categoryElement.className = `item-card ${type}`;
       categoryElement.innerHTML = `
-              ${getCategoryEmoji(category)} ${category} - $${amount}
+              ${getCategoryEmoji(category)} ${category} - ${formatCurrency(amount)}
             `;
-
       topCategoriesContainer.appendChild(categoryElement);
     });
-
-    if (topCategoriesContainer.children.length === 0) {
-      const noDataElement = document.createElement("div");
-      noDataElement.className = "item-card";
-      noDataElement.textContent = "No transaction data available";
-      topCategoriesContainer.appendChild(noDataElement);
-    }
-  } catch {
+  } catch(error) {
     const topCategoriesContainer = document.querySelector(
       ".card:nth-child(2) #top-category"
     );
+    console.error("Error loading top categories:", error);
     topCategoriesContainer.innerHTML = "";
     const noDataElement = document.createElement("div");
     noDataElement.className = "item-card";
@@ -407,9 +419,7 @@ function showTransactionDetails(transaction) {
   // Populate the modal with transaction details
   document.getElementById("detail-type").textContent =
     transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1);
-  document.getElementById(
-    "detail-amount"
-  ).textContent = `$${transaction.Amount}`;
+  document.getElementById("detail-amount").textContent = formatCurrency(transaction.Amount);
   document.getElementById("detail-category").textContent = `${getCategoryEmoji(
     transaction.Category
   )} ${transaction.Category}`;
@@ -528,6 +538,30 @@ function setupTransactionDetailsModal() {
   deleteBtn.addEventListener("click", deleteTransaction);
 }
 
+// Fetch user's currency when page loads
+async function fetchUserCurrency() {
+  try {
+    const response = await axios.get("/api/currency");
+    const { currency } = response.data;
+    userCurrency = currency;
+    localStorage.setItem("currency", currency);
+    
+    // Update currency display with fetched currency
+    updateCurrencyDisplay(currency);
+  } catch (error) {
+    console.error("Error fetching user currency:", error);
+  }
+}
+
+// Initialize dashboard
+async function initializeDashboard() {
+  await fetchUserCurrency();
+  await loadSummaryData();
+  await loadRecentTransactions();
+}
+
+// Call initialize function when page loads
+document.addEventListener("DOMContentLoaded", initializeDashboard);
 
 // Load data when page loads
 window.addEventListener("DOMContentLoaded", () => {

@@ -46,7 +46,7 @@ addIncomeForm.addEventListener("submit", async (e) => {
   const amount = Number(document.getElementById("income-amount").value);
   const category = document.getElementById("income-category").value;
   const description = document.getElementById("income-description").value;
-  console.log(typeof category);
+
   try {
     const res = await axios
       .post("/api/income", {

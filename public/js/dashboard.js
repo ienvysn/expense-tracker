@@ -163,6 +163,9 @@ function displayTransactionsPage(page) {
 
     allTransactionsContainer.appendChild(transactionElement);
   });
+
+  // Add transaction card listeners after updating the content
+  addTransactionCardListeners();
 }
 
 function renderPaginationControls() {
@@ -502,7 +505,7 @@ async function deleteTransaction() {
 
     await axios.delete(endpoint);
 
-    // Close the modal
+
     document.getElementById("transaction-details-modal").style.display = "none";
 
     loadSummaryData();
@@ -516,7 +519,7 @@ async function deleteTransaction() {
   }
 }
 
-// Setup modal close and delete button functionality
+
 function setupTransactionDetailsModal() {
   const modal = document.getElementById("transaction-details-modal");
   const closeBtn = document.getElementById("close-transaction-details");
@@ -534,7 +537,11 @@ function setupTransactionDetailsModal() {
     }
   });
 
-  // Handle delete button click
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && modal.style.display === "block") {
+      modal.style.display = "none";
+    }
+  });
   deleteBtn.addEventListener("click", deleteTransaction);
 }
 

@@ -84,7 +84,7 @@ addExpenseForm.addEventListener("submit", async (e) => {
         Description: description,
       })
       .then((response) => {
-        addIncomeForm.reset();
+        addExpenseForm.reset();
         addTransactionModal.style.display = "none";
         loadSummaryData();
         loadRecentTransactions();

@@ -8,31 +8,9 @@ const passwordForm = document.getElementById("password-form");
 const settingsForm = document.getElementById("settings-form");
 const deleteAccountBtn = document.getElementById("delete-account");
 
-// Fetch user data
-// async function fetchUserData() {
-//   try {
-//     userData = {
-//       username: "JohnDoe",
-//       email: "john.doe@example.com",
-//       settings: {
-//         currency: "USD",
-//       },
-//     };
-
-//     document.getElementById("profile-username").value = userData.username;
-//     document.getElementById("profile-email").value = userData.email;
-//     document.getElementById("currency").value = userData.settings.currency;
-//   } catch (error) {
-//     console.error("Error fetching user data:", error);
-//     alert("Failed to load user data. Please try again.");
-//   }
-// }
-
-// // Event Listeners
 // Open modal when profile link is clicked
 profileNavLink.addEventListener("click", () => {
   profileModal.style.display = "block";
-  fetchUserData();
 });
 
 // Close modal when X is clicked
@@ -46,7 +24,7 @@ window.addEventListener("click", (event) => {
   }
 });
 
-// Tab switching functionality
+// Tab switching
 tabButtons.forEach((button) => {
   button.addEventListener("click", () => {
     tabButtons.forEach((btn) => btn.classList.remove("active"));
@@ -58,50 +36,47 @@ tabButtons.forEach((button) => {
 });
 
 // Profile form submission
-// profileForm.addEventListener("submit", async (e) => {
-//   e.preventDefault();
+profileForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-//   const username = document.getElementById("profile-username").value;
+  const username = document.getElementById("profile-username").value;
 
-//   try {
-//     // In a real implementation, this would be an API call
-//     // await axios.put('/api/auth/update-profile', { username });
+  try {
+    const responseUsername = await axios.post("/api/profile/username", {
+      username,
+    });
 
-//     // Update local user data
-//     userData.username = username;
+    showNotification("Profile updated successfully!");
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    showNotification("Failed to update profile", "error");
+  }
+});
 
-//     showNotification("Profile updated successfully!");
-//   } catch (error) {
-//     console.error("Error updating profile:", error);
-//     showNotification("Failed to update profile", "error");
-//   }
-// });
+passwordForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-// Password form submission
-// passwordForm.addEventListener("submit", async (e) => {
-//   e.preventDefault();
+  const newPassword = document.getElementById("new-password").value;
+  const confirmPassword = document.getElementById("confirm-password").value;
 
-//   const currentPassword = document.getElementById("current-password").value;
-//   const newPassword = document.getElementById("new-password").value;
-//   const confirmPassword = document.getElementById("confirm-password").value;
-
-//   if (newPassword !== confirmPassword) {
-//     showNotification("New passwords do not match", "error");
-//     return;
-//   }
-
-//   try {
-//     // Clear password fields
-//     document.getElementById("current-password").value = "";
-//     document.getElementById("new-password").value = "";
-//     document.getElementById("confirm-password").value = "";
-
-//     showNotification("Password changed successfully!");
-//   } catch (error) {
-//     console.error("Error changing password:", error);
-//     showNotification("Failed to change password", "error");
-//   }
-// });
+  if (newPassword !== confirmPassword) {
+    showNotification("New passwords do not match", "error");
+    return;
+  }
+  console.log(typeof confirmPassword);
+  try {
+    const response = await axios.post("/api/profile/password", {
+      confirmPassword,
+    });
+    document.getElementById("current-password").value = "";
+    document.getElementById("new-password").value = "";
+    document.getElementById("confirm-password").value = "";
+    showNotification("Password changed successfully!");
+  } catch (error) {
+    console.error("Error changing password:", error);
+    showNotification("Failed to change password", "error");
+  }
+});
 
 settingsForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -111,20 +86,18 @@ settingsForm.addEventListener("submit", async (e) => {
   try {
     // Update currency via API
     const response = await axios.post("/api/currency", { currency });
-    
+
     // Update local storage
     localStorage.setItem("currency", currency);
-    
+
     // Update currency display across the dashboard
     updateCurrencyDisplay(currency);
-    
     showNotification("Settings updated successfully!");
   } catch (error) {
     console.error("Error updating settings:", error);
     showNotification("Failed to update settings", "error");
   }
 });
-
 deleteAccountBtn.addEventListener("click", () => {
   const confirmModal = document.createElement("div");
   confirmModal.className = "confirm-modal";

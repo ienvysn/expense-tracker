@@ -2,7 +2,7 @@ const express = require("express");
 
 const User = require("../models/userModel");
 
-// Middleware to authenticate user
+
 
 // Update user settings
 const currencyUpdate = async (req, res) => {

@@ -63,12 +63,12 @@ passwordForm.addEventListener("submit", async (e) => {
     showNotification("New passwords do not match", "error");
     return;
   }
-  console.log(typeof confirmPassword);
+  console.log(confirmPassword);
   try {
     const response = await axios.post("/api/profile/password", {
-      confirmPassword,
+      password: confirmPassword,
     });
-    document.getElementById("current-password").value = "";
+
     document.getElementById("new-password").value = "";
     document.getElementById("confirm-password").value = "";
     showNotification("Password changed successfully!");
@@ -125,6 +125,7 @@ deleteAccountBtn.addEventListener("click", () => {
     .querySelector(".confirm-delete-btn")
     .addEventListener("click", async () => {
       try {
+        await axios.get("/api/profile/delete");
         localStorage.removeItem("token");
         window.location.href = "/login.html";
       } catch (error) {

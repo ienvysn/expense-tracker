@@ -5,19 +5,21 @@ const bcrypt = require("bcryptjs");
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: true,
     unique: true,
     trim: true,
+    sparse: true,
   },
   email: {
     type: String,
-    required: true,
     unique: true,
     trim: true,
+    sparse: true,
   },
   password: {
     type: String,
-    required: true,
+    required: function () {
+      return !this.googleId;
+    },
   },
   balance: {
     type: Number,
@@ -27,6 +29,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "USD",
   },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true,
+  },
+  displayName: String,
+  photo: String,
 });
 
 //hash password before saving

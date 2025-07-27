@@ -7,11 +7,44 @@ const summaryRoutes = require("./router/summary");
 const currencyRoutes = require("./router/currency");
 const profileRoutes = require("./router/profile");
 
+//auth
+const session = require("express-session");
+
+const passport = require("passport"); // loads the passport library
+require("./auth/passport"); // ← loads passport.js
+
+//DB
 const connectDB = require("./db/db");
 const path = require("path");
 const app = express();
 app.use(express.json());
 
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Auth route
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+// Redirect URI
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/" }),
+  (req, res) => {
+    res.redirect("/dashboard");
+  }
+);
+
+//APIs
 app.use("/api/expenses", expenseRouter);
 app.use("/api/auth", authRoutes);
 app.use("/api/income", incomeRoutes);
@@ -20,6 +53,7 @@ app.use("/api/summary", summaryRoutes);
 app.use("/api/currency", currencyRoutes);
 app.use("/api/profile", profileRoutes);
 
+//Server
 app.use(express.static(path.join(__dirname, "public")));
 app.get("/dashboard", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "dashboard.html"));

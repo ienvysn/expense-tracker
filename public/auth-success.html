@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Authentication Success</title>
+    <style>
+      body {
+        opacity: 0; /* Make content completely transparent */
+        visibility: hidden; /* Ensure it doesn't take up space */
+        overflow: hidden; /* Hide scrollbars if any */
+        /* Optional: Add a very short transition for smoother appearance if you ever decide to show something */
+        transition: opacity 0.001s, visibility 0.001s;
+        background-color: #121212;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Logging you in securely...</p>
+    <script>
+      // Extract token from URL query parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get("token");
+
+      if (token) {
+        localStorage.setItem("token", token);
+        window.location.href = "/dashboard.html";
+      } else {
+        window.location.href = "/login.html?error=auth_failed";
+      }
+    </script>
+  </body>
+</html>

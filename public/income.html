@@ -4,84 +4,282 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Income - Expense Tracker</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/css/dashboardstyles.css" />
     <link rel="stylesheet" href="/css/pagination.css" />
     <link rel="stylesheet" href="/css/add.css" />
     <link rel="stylesheet" href="/css/modal.css" />
+    <link rel="stylesheet" href="/css/income.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <!-- <link rel="stylesheet" href="/css/transaction.css" /> -->
   </head>
   <body>
     <aside>
       <div>
         <h1>Expense Tracker</h1>
-        <div class="nav-link">Dashboard</div>
-        <div class="nav-link active">Income</div>
-        <div class="nav-link">Expense</div>
-        <div class="nav-link" id="profile">Profile</div>
+        <ul class="sidebar-nav">
+          <li class="nav-link"><a href="/dashboard.html"></i> Dashboard</a></li>
+          <li class="nav-link active"><a href="/income.html"></i> Income</a></li>
+          <li class="nav-link"><a href="/expense.html"></i> Expenses</a></li>
+          <li class="nav-link" id="profile"><a href="#"></i> Profile</a></li>
+        </ul>
       </div>
       <button class="logout-btn">Logout</button>
     </aside>
+
     <main>
       <div class="card-container">
         <!-- Income Card -->
         <div class="card" style="max-height: 220px; overflow-y: auto">
-          <h3 class="summary-heading">Monthly Income</h3>
+          <h3 class="summary-heading">Balance</h3>
           <div class="item-cards">
-            <div class="summary-text green" id="income-summary">$0</div>
+            <div class="summary-text">$0</div>
           </div>
         </div>
+        <!-- Income Card -->
+        <div class="card" style="max-height: 220px; overflow-y: auto">
+          <h3 class="summary-heading">Income</h3>
+          <div class="item-cards">
+            <div class="summary-text green">$0</div>
+          </div>
+        </div>
+
+        <!-- Expenses Card Removed -->
       </div>
-      <h2 class="section-title">Income Transactions</h2>
+      <h2 class="section-title">Transaction</h2>
+
+      <!-- Top Section -->
+      <div class="card-container">
+        <!-- Recent Expenses -->
+        <div class="card">
+          <h3>Recent Transaction</h3>
+          <div class="item-cards" id="recent-transaction"></div>
+        </div>
+
+        <!-- Top Categories -->
+        <div class="card">
+          <h3>Top Categories</h3>
+          <div class="item-cards" id="top-category"></div>
+        </div>
+      </div>
+
+      <!-- All Expenses -->
       <div class="all-expenses">
         <div class="all-expenses-header">
-          <h3>All Income</h3>
+          <h3>All Transaction</h3>
           <div class="all-expenses-header">
-            <select id="sort-income">
+            <select id="sort-transactions">
               <option value="date-desc">Date (newest first)</option>
               <option value="date-asc">Date (oldest first)</option>
               <option value="amount-desc">Amount (highest first)</option>
               <option value="amount-asc">Amount (lowest first)</option>
+              <option value="type">Type (Income/Expense)</option>
             </select>
           </div>
         </div>
-        <div class="item-cards" id="income-list"></div>
+        <div class="item-cards"></div>
       </div>
     </main>
-    <!-- Add Income Modal -->
-    <div id="add-income-modal" class="modal">
+    <div id="profile-modal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
-          <h2>Add Income</h2>
-          <span class="close-modal" id="close-income-modal">&times;</span>
+          <h2>Profile Settings</h2>
+          <span class="close-modal">&times;</span>
         </div>
-        <form id="add-income-form">
-          <div class="form-group">
-            <label for="income-amount">Amount</label>
-            <input type="number" id="income-amount" placeholder="Enter amount" min="0" step="0.01" required />
+
+        <div class="modal-tabs">
+          <button class="tab-btn active" data-tab="profile-info">
+            Profile Info
+          </button>
+          <button class="tab-btn" data-tab="settings">Settings</button>
+        </div>
+
+        <div class="tab-content active" id="profile-info">
+          <div class="profile-section">
+            <h3>Edit User Information</h3>
+            <form id="profile-form">
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input
+                  type="text"
+                  id="profile-username"
+                  placeholder="Username"
+                />
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input
+                  type="email"
+                  id="profile-email"
+                  placeholder="Email"
+                  readonly
+                />
+              </div>
+              <button type="submit" class="save-btn">Save Changes</button>
+            </form>
           </div>
-          <div class="form-group">
-            <label for="income-category">Category</label>
-            <select id="income-category" required>
-              <option value="" disabled selected>Select category</option>
-              <option value="Salary">Salary</option>
-              <option value="Business">Business</option>
-              <option value="Gifts">Gifts</option>
-              <option value="Interest">Interest</option>
-              <option value="Allowance">Allowance</option>
-              <option value="Other">Other</option>
-            </select>
+
+          <div class="profile-section">
+            <h3>Change Password</h3>
+            <form id="password-form">
+              <div class="form-group">
+                <label for="new-password">New Password</label>
+                <input
+                  type="password"
+                  id="new-password"
+                  placeholder="New Password"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="confirm-password">Confirm New Password</label>
+                <input
+                  type="password"
+                  id="confirm-password"
+                  placeholder="Confirm New Password"
+                  required
+                />
+              </div>
+              <button type="submit" class="save-btn">Update Password</button>
+            </form>
           </div>
-          <div class="form-group">
-            <label for="income-description">Description</label>
-            <input type="text" id="income-description" placeholder="Enter description" required />
+        </div>
+
+        <div class="tab-content" id="settings">
+          <div class="profile-section">
+            <h3>Application Settings</h3>
+            <form id="settings-form">
+              <div class="form-group">
+                <label for="currency">Currency</label>
+                <select id="currency">
+                  <option value="USD">USD ($)</option>
+                  <option value="EUR">EUR (€)</option>
+                  <option value="GBP">GBP (£)</option>
+                  <option value="JPY">JPY (¥)</option>
+                  <option value="INR">INR (₹)</option>
+                  <option value="CAD">CAD (C$)</option>
+                  <option value="AUD">AUD (A$)</option>
+                </select>
+              </div>
+              <button type="submit" class="save-btn">Save Settings</button>
+            </form>
           </div>
-          <button type="submit" class="save-btn">Add Income</button>
-        </form>
+
+          <div class="profile-section danger-zone">
+            <h3>Danger Zone</h3>
+            <p>
+              Once you delete your account, there is no going back. Please be
+              certain.
+            </p>
+            <button id="delete-account" class="delete-btn">
+              Delete Account
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="add-transaction-btn" id="add-income-btn">+</div>
+
+    <!-- Add Income Modal -->
+    <div id="incomeModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="incomeModalTitle">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="incomeModalTitle">Add/Edit Income</h2>
+          <span class="close-modal" id="close-income-modal">&times;</span>
+        </div>
+
+        <div class="tab-content active" id="add-income">
+          <form id="incomeForm">
+            <div class="form-group">
+              <label for="incomeDate">Date</label>
+              <input type="date" id="incomeDate" required>
+            </div>
+            <div class="form-group">
+              <label for="incomeAmount">Amount</label>
+              <input
+                type="number"
+                id="incomeAmount"
+                placeholder="Enter amount"
+                min="0"
+                step="0.01"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="incomeCategory">Category</label>
+              <select id="incomeCategory" required>
+                <option value="">Select Category</option>
+                <option value="Salary">Salary</option>
+                <option value="Freelance">Freelance</option>
+                <option value="Gift">Gift</option>
+                <option value="Investments">Investments</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="incomeDescription">Description</label>
+              <input
+                type="text"
+                id="incomeDescription"
+                placeholder="e.g., Monthly Salary, Freelance Work"
+                required
+              />
+            </div>
+            <button type="submit" class="save-btn">Save Income</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Transaction Button -->
+    <div class="add-transaction-btn">+</div>
+    <!-- Transaction Details Modal -->
+    <div id="transaction-details-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Transaction Details</h2>
+          <span class="close-modal" id="close-transaction-details"
+            >&times;</span
+          >
+        </div>
+        <div class="modal-body">
+          <div class="transaction-detail">
+            <div class="detail-row">
+              <span class="detail-label">Type:</span>
+              <span class="detail-value" id="detail-type"></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Amount:</span>
+              <span class="detail-value" id="detail-amount"></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Category:</span>
+              <span class="detail-value" id="detail-category"></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Description:</span>
+              <span class="detail-value" id="detail-description"></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Date:</span>
+              <span class="detail-value" id="detail-date"></span>
+            </div>
+          </div>
+          <div class="transaction-actions">
+            <button id="delete-transaction" class="delete-btn">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="js/income.js"></script>
-    <script src="js/modal.js"></script>
+    <script src="js/add.js"></script>
+    
   </body>
-</html> 
+</html>

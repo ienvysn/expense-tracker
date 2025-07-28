@@ -40,7 +40,9 @@ app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
-    res.redirect("/dashboard");
+    const token = req.user.token;
+
+    res.redirect(`/auth-success.html?token=${token}`);
   }
 );
 

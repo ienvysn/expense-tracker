@@ -21,6 +21,11 @@ const incomeSchema = new mongoose.Schema(
       trim: true,
       request: true,
     },
+    Date: {
+      type: Date,
+      required: true,
+      default: Date.now,
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

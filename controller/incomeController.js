@@ -2,7 +2,7 @@ const Income = require("../models/incomeModel");
 const User = require("../models/userModel");
 const addIncome = async (req, res) => {
   try {
-    const { Amount, Category, Description } = req.body;
+    const { Amount, Category, Description, Date } = req.body;
     if (!Amount || !Category) {
       return res.status(400).json({ error: "All fields are required" });
     }
@@ -10,6 +10,7 @@ const addIncome = async (req, res) => {
       Amount,
       Category,
       Description,
+      Date,
       user: req.user.userId,
     });
     await User.findByIdAndUpdate(req.user.userId, {

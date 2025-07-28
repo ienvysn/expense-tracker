@@ -570,12 +570,28 @@ async function initializeDashboard() {
 // Call initialize function when page loads
 document.addEventListener("DOMContentLoaded", initializeDashboard);
 
+function setupNavigation() {
+  const navLinks = document.querySelectorAll(".nav-link");
+  navLinks.forEach(link => {
+    // Exclude the profile link from navigation
+    if (link.id !== "profile") {
+      link.addEventListener("click", function() {
+        const href = this.querySelector("a").getAttribute("href");
+        if (href) {
+          window.location.href = href;
+        }
+      });
+    }
+  });
+}
+
 // Load data when page loads
 window.addEventListener("DOMContentLoaded", () => {
   loadSummaryData();
   loadRecentTransactions();
   loadTopCategories();
   displayTransactionsPage();
+  setupNavigation(); // Setup navigation for the sidebar
 
   document
     .getElementById("sort-transactions")

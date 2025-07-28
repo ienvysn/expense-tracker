@@ -305,3 +305,31 @@ main {
   outline: none;
   border-color: var(--accent);
 }
+ul {
+  list-style-type: none;
+}
+
+a {
+  color: inherit; /* Inherit color from parent, or set a specific color like #fff */
+  text-decoration: none; /* Removes the underline */
+}
+
+/* Highlight for the active sidebar navigation item */
+.sidebar-nav ul li.active a {
+  background-color: var(
+    --primary-color
+  ); /* Use your primary color for the background */
+
+  color: var(--button-text-color);
+  border-radius: var(--border-radius-sm); /* Slightly rounded corners */
+  padding: 10px 15px; /* Adjust padding to make it look like a button */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+}
+
+/* Ensure the non-active links still have their default hover state */
+.sidebar-nav ul li a:hover:not(.active) {
+  background-color: var(
+    --hover-bg
+  ); /* Use a subtle hover background for non-active links */
+  color: var(--text-color-dark);
+}

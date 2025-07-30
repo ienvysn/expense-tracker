@@ -13,6 +13,11 @@ const session = require("express-session");
 const passport = require("passport"); // loads the passport library
 require("./auth/passport"); // ← loads passport.js
 
+//redis
+const { redisClient, connectRedis } = require("./redisClient");
+connectRedis().catch((err) => {
+  console.error("Failed to connect to Redis:", err);
+});
 //DB
 const connectDB = require("./db/db");
 const path = require("path");

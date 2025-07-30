@@ -1,5 +1,7 @@
 const Expense = require("../models/expenseModel");
 const User = require("../models/userModel");
+const { redisClient } = require("../redisClient");
+const SUMMARY_CACHE_KEY_PREFIX = "userSummary:";
 const addExpense = async (req, res) => {
   try {
     const { Amount, Category, Description, Date } = req.body;
@@ -17,6 +19,12 @@ const addExpense = async (req, res) => {
     await User.findByIdAndUpdate(req.user.userId, {
       $inc: { balance: -Amount },
     });
+    const userId = req.user.userId;
+
+    //remove cache
+    const cacheKeyToInvalidate = `${SUMMARY_CACHE_KEY_PREFIX}${userId}`;
+    await redisClient.del(cacheKeyToInvalidate);
+    console.log(`Cache INVALDATED: Summary for user ${userId} removed.`);
     res.status(201).json(newExpense);
   } catch (error) {
     res.status(500).send({ error: error.message });
@@ -67,6 +75,12 @@ const deleteExpense = async (req, res) => {
     await User.findByIdAndUpdate(req.user.userId, {
       $inc: { balance: amountToRefund },
     });
+
+    //caching
+    const userId = req.user.userId;
+    const cacheKeyToInvalidate = `${SUMMARY_CACHE_KEY_PREFIX}${userId}`;
+    await redisClient.del(cacheKeyToInvalidate);
+    console.log(`Cache INVALDATED: Summary for user ${userId} removed.`);
 
     res.status(200).json({ message: "Expense deleted successfully" });
   } catch (err) {

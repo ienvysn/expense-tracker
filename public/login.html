@@ -26,16 +26,18 @@
             placeholder="Password"
             required
           />
-          <button type="submit">Login</button>
+          <div class="login-actions">
+            <button class="login" type="submit">Login</button>
+            <div class="vertical-divider"></div>
+            <button
+              type="button"
+              onclick="window.location.href='http://localhost:3000/auth/google'"
+              class="login-with-google-btn"
+            >
+              Log in with Google
+            </button>
+          </div>
         </form>
-
-        <button
-          type="button"
-          onclick="window.location.href='http://localhost:3000/auth/google'"
-          class="login-with-google-btn"
-        >
-          Log in with Google
-        </button>
         <div class="register-note">
           Don't have an account? <a href="/index.html">Register here</a>
         </div>

@@ -6,7 +6,7 @@ const balanceRoutes = require("./router/balance");
 const summaryRoutes = require("./router/summary");
 const currencyRoutes = require("./router/currency");
 const profileRoutes = require("./router/profile");
-const passwordRoutes = require("/router/password.js");
+const passwordRoutes = require("./router/password.js");
 
 //auth
 const session = require("express-session");
@@ -60,7 +60,7 @@ app.use("/api/balance", balanceRoutes);
 app.use("/api/summary", summaryRoutes);
 app.use("/api/currency", currencyRoutes);
 app.use("/api/profile", profileRoutes);
-app.use("/api/forgot-pasword", passwordRoutes);
+app.use("/api/forgot-password", passwordRoutes);
 //Server
 app.use(express.static(path.join(__dirname, "public")));
 app.get("/dashboard", (req, res) => {

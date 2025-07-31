@@ -56,14 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
       modalMessage.className = "modal-message"; // Reset class
 
       try {
-        // IMPORTANT: Replace '/api/forgot-password' with your actual backend endpoint
-        // You will need to create this endpoint in your Node.js server
-        const response = await fetch("/api/forgot-password", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email }),
+        const response = await axios.post("/api/forgot-password", {
+          email,
         });
 
         const data = await response.json();
@@ -72,8 +66,8 @@ document.addEventListener("DOMContentLoaded", () => {
           modalMessage.textContent =
             data.message || "Password reset link sent to your email!";
           modalMessage.classList.add("success");
-          // Optionally close modal after a short delay or on user action
-          // setTimeout(closeModal, 3000);
+
+          setTimeout(closeModal, 3000);
         } else {
           modalMessage.textContent =
             data.error || "Failed to send reset link. Please try again.";

@@ -26,6 +26,9 @@
             placeholder="Password"
             required
           />
+          <div class="forgot-password" id="forgot-password">
+            Forget Password?
+          </div>
           <div class="login-actions">
             <button class="login" type="submit">Login</button>
             <div class="vertical-divider"></div>
@@ -42,9 +45,29 @@
           Don't have an account? <a href="/index.html">Register here</a>
         </div>
       </div>
+      <div id="forgotPasswordModal" class="modal-backdrop hidden">
+        <div class="modal-content">
+          <span class="close-button">&times;</span>
+          <h3>Forgot Password</h3>
+          <p>Enter your email address to receive a password reset link.</p>
+          <div class="hr"></div>
+          <form id="forgotPasswordForm">
+            <div class="input-group">
+              <input
+                type="email"
+                id="resetEmail"
+                name="email"
+                placeholder="Enter your Email"
+              />
+            </div>
+            <button type="submit" class="btn">Send Reset Link</button>
+          </form>
+          <div id="modalMessage" class="modal-message"></div>
+        </div>
+      </div>
     </div>
   </body>
-
+  <script src="js/forgetpassword.js"></script>
   <script>
     const loginForm = document.querySelector(".login-form");
 

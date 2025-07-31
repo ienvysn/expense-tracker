@@ -8,9 +8,8 @@ router.get(
   "/",
   protect,
   (req, res, next) => {
-    console.log("DEBUG: Request entered /api/summary route in router."); // ADD THIS LINE
-    next(); // Pass control to the next middleware (getSummary)
+    next();
   },
   getSummary
-); // <-- getSummary is the next handler after our log
+);
 module.exports = router;

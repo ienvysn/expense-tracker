@@ -16,6 +16,7 @@ async function sendEmail(email, message) {
       subject: "Reset Password",
       text: message,
     };
+    await transporter.sendMail(mailOptions);
   } catch (err) {
     console.error("Error sending email:", err);
   }

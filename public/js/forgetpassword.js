@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
           email,
         });
 
-        const data = await response.json();
+        const data = await response.data;
 
         if (response.ok) {
           modalMessage.textContent =
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
           setTimeout(closeModal, 3000);
         } else {
           modalMessage.textContent =
-            data.error || "Failed to send reset link. Please try again.";
+            data.error || "Invalid mail. Please try again.";
           modalMessage.classList.add("error");
         }
       } catch (error) {

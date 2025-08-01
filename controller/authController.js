@@ -1,3 +1,5 @@
+// ienvysn/expense-tracker/expense-tracker-ebc0b1d22e6ab2025a481179695e0bc953aee57f/controller/authController.js
+
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -19,9 +21,19 @@ const register = async (req, res) => {
 
     // create user
     const newUser = await User.create({ username, email, password });
-    res.status(201).json({ message: "User registered successfully" });
+
+    // Generate JWT token for the newly registered user
+    const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d", // Match the expiration with your login token
+    });
+
+    // Send the token back to the client
+    res.status(201).json({ message: "User registered successfully", token }); // Add token here
   } catch (err) {
-    res.status(500).json({ message: "Registration failed" });
+    console.error("Registration error:", err); // Add error logging for debugging
+    res
+      .status(500)
+      .json({ message: "Registration failed", error: err.message }); // Send error message for better debugging
   }
 };
 
@@ -48,7 +60,8 @@ const login = async (req, res) => {
 
     res.status(200).json({ token });
   } catch (error) {
-    res.status(500).json({ error });
+    console.error("Login error:", error); // Add error logging
+    res.status(500).json({ error: error.message }); // Send error message
   }
 };
 

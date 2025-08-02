@@ -84,7 +84,7 @@ const comapareToken = async (req, res) => {
       if (err) {
         console.error("Error sending file:", err);
         if (!res.headersSent) {
-          res
+          return res
             .status(500)
             .send("Error: Could not display the password reset page.");
         }

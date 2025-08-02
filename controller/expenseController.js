@@ -25,6 +25,7 @@ const addExpense = async (req, res) => {
     const cacheKeyToInvalidate = `${SUMMARY_CACHE_KEY_PREFIX}${userId}`;
     await redisClient.del(cacheKeyToInvalidate);
     console.log(`Cache INVALDATED: Summary for user ${userId} removed.`);
+    await window.renderOrUpdateChart();
     res.status(201).json(newExpense);
   } catch (error) {
     res.status(500).send({ error: error.message });

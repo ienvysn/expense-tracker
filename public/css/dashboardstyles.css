@@ -19,6 +19,7 @@ body {
   display: flex;
   min-height: 100vh;
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 aside {
@@ -332,4 +333,24 @@ a {
     --hover-bg
   ); /* Use a subtle hover background for non-active links */
   color: var(--text-color-dark);
+}
+
+/* Fix for the chart card */
+.card.chart-card {
+  max-height: none;
+  overflow-y: hidden;
+  margin-top: -25px;
+}
+
+/* Container to help center the chart */
+.chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.chart-container canvas {
+  max-width: 320px;
+  max-height: 320px;
 }

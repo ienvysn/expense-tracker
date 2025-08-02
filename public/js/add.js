@@ -48,8 +48,6 @@ addIncomeForm.addEventListener("submit", async (e) => {
   const category = document.getElementById("income-category").value;
   const description = document.getElementById("income-description").value;
 
-  console.log("Attempting to add income with data:", { Date: date, Amount: amount, Category: category, Description: description });
-
   try {
     const res = await axios
       .post("/api/income", {
@@ -59,17 +57,24 @@ addIncomeForm.addEventListener("submit", async (e) => {
         Date: date,
       })
       .then((response) => {
-        console.log("Income added successfully! Server response:", response.data);
+        console.log(
+          "Income added successfully! Server response:",
+          response.data
+        );
         addIncomeForm.reset();
         addTransactionModal.style.display = "none";
         loadSummaryData();
         loadRecentTransactions();
         loadTopCategories();
         loadAllTransactions("date-desc");
+        window.renderOrUpdateChart();
         showNotification("Income added successfully!");
       });
   } catch (error) {
-    console.error("Error adding income:", error.response ? error.response.data : error.message);
+    console.error(
+      "Error adding income:",
+      error.response ? error.response.data : error.message
+    );
     showNotification("Failed to add income", "error");
   }
 });
@@ -82,7 +87,12 @@ addExpenseForm.addEventListener("submit", async (e) => {
   const category = document.getElementById("expense-category").value;
   const description = document.getElementById("expense-description").value;
 
-  console.log("Attempting to add expense with data:", { Date: date, Amount: amount, Category: category, Description: description });
+  console.log("Attempting to add expense with data:", {
+    Date: date,
+    Amount: amount,
+    Category: category,
+    Description: description,
+  });
 
   try {
     const res = await axios
@@ -93,18 +103,25 @@ addExpenseForm.addEventListener("submit", async (e) => {
         Date: date,
       })
       .then((response) => {
-        console.log("Expense added successfully! Server response:", response.data);
+        console.log(
+          "Expense added successfully! Server response:",
+          response.data
+        );
         addExpenseForm.reset();
         addTransactionModal.style.display = "none";
         loadSummaryData();
         loadRecentTransactions();
         loadTopCategories();
+        window.renderOrUpdateChart();
         loadAllTransactions("date-desc");
       });
 
     showNotification("Expense added successfully!");
   } catch (error) {
-    console.error("Error adding expense:", error.response ? error.response.data : error.message);
+    console.error(
+      "Error adding expense:",
+      error.response ? error.response.data : error.message
+    );
     showNotification("Failed to add expense", "error");
   }
 });

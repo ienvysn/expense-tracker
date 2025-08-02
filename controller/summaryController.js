@@ -12,7 +12,6 @@ const getSummary = async (req, res) => {
     const cacheKey = `${SUMMARY_CACHE_KEY_PREFIX}${userId}`; // ci just added cachinghache of a a particular userID
     const cachedSummary = await redisClient.get(cacheKey); //check for cache
 
-    await user.save();
     if (cachedSummary) {
       console.log(`Cache HIT for summary: ${cacheKey}`);
       return res.status(200).json(JSON.parse(cachedSummary));

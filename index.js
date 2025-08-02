@@ -7,7 +7,7 @@ const summaryRoutes = require("./router/summary");
 const currencyRoutes = require("./router/currency");
 const profileRoutes = require("./router/profile");
 const passwordRoutes = require("./router/password.js");
-
+const chartRoutes = require("./router/chart");
 //auth
 const session = require("express-session");
 
@@ -61,6 +61,7 @@ app.use("/api/summary", summaryRoutes);
 app.use("/api/currency", currencyRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/forgot-password", passwordRoutes);
+app.use("/api/chart", chartRoutes);
 //Server
 app.use(express.static(path.join(__dirname, "public")));
 app.get("/dashboard", (req, res) => {
